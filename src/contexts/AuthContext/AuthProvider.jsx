@@ -7,7 +7,7 @@ import { auth } from '../../firebase/firebase.init';
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
-    const [user,setUser] = useState(null);
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
 
@@ -29,20 +29,43 @@ const AuthProvider = ({ children }) => {
 
     const googleSignIn = () => {
         setLoading(true);
-        return signInWithPopup(auth , googleProvider);
+        return signInWithPopup(auth, googleProvider);
     }
 
 
-    useEffect(()=>{
-        const unsubscribe = onAuthStateChanged(auth , currentUser => {
-            setUser(currentUser);
+    // useEffect(()=>{
+    //     const unsubscribe = onAuthStateChanged(auth , currentUser => {
+    //         setUser(currentUser);
+    //         setLoading(false);
+    //     });
+
+    //     return () =>{
+    //         unsubscribe();
+    //     }
+    // },[])
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, currentUser => {
+            if (currentUser) {
+                // Temporary way to assign role
+                const tempUser = {
+                    ...currentUser,
+                    role: currentUser.email === "admin@admin.com" ? "admin" : "user",
+                    isMember: false // Optional: For membership
+                };
+                setUser(tempUser);
+            } else {
+                setUser(null);
+            }
+
             setLoading(false);
         });
 
-        return () =>{
+        return () => {
             unsubscribe();
-        }
-    },[])
+        };
+    }, []);
+
 
 
     const authInfo = {
