@@ -98,6 +98,7 @@ import AdminDashboardLayout from "../layout/AdminDashboardLayout";
 import ManageUsers from "../pages/Dashboard/ManageUsers";
 import PrivateRoutes from "../routes/PrivateRoutes";
 import AdminRoute from "../routes/AdminRoute";
+import AddPost from "../pages/Dashboard/UserDashboard/AddPost";
 
 export const router = createBrowserRouter([
   {
@@ -151,6 +152,10 @@ export const router = createBrowserRouter([
         element: <DashboardHome />,
       },
       // Add: profile, add-post, my-posts later
+      {
+        path: 'add-post',
+        Component: AddPost,
+      },
     ],
   },
 
