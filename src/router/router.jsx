@@ -99,6 +99,10 @@ import ManageUsers from "../pages/Dashboard/ManageUsers";
 import PrivateRoutes from "../routes/PrivateRoutes";
 import AdminRoute from "../routes/AdminRoute";
 import AddPost from "../pages/Dashboard/UserDashboard/AddPost";
+import MyProfile from "../pages/Dashboard/UserDashboard/MyProfile";
+import MyPost from "../pages/Dashboard/UserDashboard/MyPost";
+import CommentsPage from "../pages/Dashboard/UserDashboard/CommentsPage";
+import AllPost from "../pages/AllPost/AllPost";
 
 export const router = createBrowserRouter([
   {
@@ -108,6 +112,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "all-post",
+        element: <AllPost></AllPost>,
       },
       {
         path: "join-us",
@@ -153,8 +161,24 @@ export const router = createBrowserRouter([
       },
       // Add: profile, add-post, my-posts later
       {
+        path: 'dashboard-home',
+        Component: DashboardHome ,
+      },
+      {
+        path: 'profile',
+        Component: MyProfile ,
+      },
+      {
         path: 'add-post',
         Component: AddPost,
+      },
+      {
+        path: 'my-posts',
+        Component: MyPost,
+      },
+      {
+        path: 'comments/:postId',
+        Component: CommentsPage,
       },
     ],
   },

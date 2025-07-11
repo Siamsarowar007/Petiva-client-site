@@ -1,12 +1,10 @@
-// AddPost.jsx
-
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import Select from "react-select";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
 import { AuthContext } from "../../../contexts/AuthContext/AuthContext";
-import Swal from "sweetalert2"; // ✅ SweetAlert2 import
+import Swal from "sweetalert2";
 
 const AddPost = () => {
   const { user } = useContext(AuthContext);
@@ -26,7 +24,7 @@ const AddPost = () => {
     { value: "training", label: "Training" },
   ];
 
-  // ✅ Fetch user’s post count using TanStack Query
+  // ✅ Fetch user's post count
   const {
     data: postCountData,
     isLoading,
@@ -41,8 +39,9 @@ const AddPost = () => {
   });
 
   const postCount = postCountData || 0;
+  const isLimitReached = postCount >= 5;
 
-  // ✅ Submit Handler with SweetAlert2
+  // ✅ Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,7 +54,7 @@ const AddPost = () => {
       tag: formData.tag?.value,
       upVote: 0,
       downVote: 0,
-      createdAt: new Date().toISOString(),
+      postTime: new Date().toISOString(),
     };
 
     try {
@@ -80,69 +79,38 @@ const AddPost = () => {
     }
   };
 
-  // ✅ Loading / Error / Post Limit Message
   if (isLoading) return <p className="text-center mt-10">Loading...</p>;
   if (isError)
     return <p className="text-center text-red-500">Failed to load post count</p>;
 
-  if (postCount >= 5) {
-    return (
-      <div className="min-h-screen flex flex-col justify-center items-center p-6">
-        <h2 className="text-2xl font-semibold text-center mb-4 text-gray-700">
-          You’ve reached the limit of 5 posts.
-        </h2>
-        <button
-          onClick={() => navigate("/membership")}
-          className="btn btn-warning"
-        >
-          Become a Member
-        </button>
-      </div>
-    );
-  }
-
-  // ✅ Post Form Rendering
   return (
     <div className="max-w-4xl mx-auto p-6">
+      {/* ✅ User Info */}
+      <div className="flex flex-col items-center gap-2 mb-8">
+        <img
+          src={user?.photoURL}
+          alt="Profile"
+          className="w-24 h-24 rounded-full border-2 border-primary object-cover"
+        />
+        <h3 className="text-xl font-semibold text-gray-800">{user?.displayName}</h3>
+        <p className="text-sm text-gray-500">{user?.email}</p>
+      </div>
+
       <h2 className="text-3xl font-bold mb-6 text-center">Add New Post</h2>
+
+      {/* ✅ Post limit warning */}
+      {isLimitReached && (
+        <div className="mb-6 text-center text-red-500 font-medium">
+          ⚠️ You’ve reached the limit of 5 posts.
+        </div>
+      )}
+
+      {/* ✅ Post Form */}
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
-        {/* Author Image */}
-        <div>
-          <label className="font-medium">Author Image</label>
-          <input
-            type="text"
-            className="input input-bordered w-full"
-            value={user?.photoURL}
-            disabled
-          />
-        </div>
-
-        {/* Author Name */}
-        <div>
-          <label className="font-medium">Author Name</label>
-          <input
-            type="text"
-            className="input input-bordered w-full"
-            value={user?.displayName}
-            disabled
-          />
-        </div>
-
-        {/* Author Email */}
-        <div>
-          <label className="font-medium">Author Email</label>
-          <input
-            type="email"
-            className="input input-bordered w-full"
-            value={user?.email}
-            disabled
-          />
-        </div>
-
-        {/* Post Title */}
+        {/* Title */}
         <div>
           <label className="font-medium">Post Title</label>
           <input
@@ -154,7 +122,7 @@ const AddPost = () => {
           />
         </div>
 
-        {/* Tag Dropdown */}
+        {/* Tag */}
         <div>
           <label className="font-medium">Select Tag</label>
           <Select
@@ -178,21 +146,41 @@ const AddPost = () => {
           ></textarea>
         </div>
 
-        {/* Upvote / Downvote Preview (not editable) */}
+        {/* Vote fields */}
         <div>
           <label className="font-medium">UpVote (default)</label>
-          <input type="number" className="input input-bordered w-full" value={0} disabled />
+          <input
+            type="number"
+            className="input input-bordered w-full"
+            value={0}
+            disabled
+          />
         </div>
         <div>
           <label className="font-medium">DownVote (default)</label>
-          <input type="number" className="input input-bordered w-full" value={0} disabled />
+          <input
+            type="number"
+            className="input input-bordered w-full"
+            value={0}
+            disabled
+          />
         </div>
 
-        {/* Submit Button */}
-        <div className="lg:col-span-2 text-right">
-          <button type="submit" className="btn btn-primary">
-            Submit Post
-          </button>
+        {/* ✅ Submit / Membership Button */}
+        <div className="lg:col-span-2 w-full">
+          {isLimitReached ? (
+            <button
+              type="button"
+              onClick={() => navigate("/membership")}
+              className="btn btn-warning w-full"
+            >
+              Become a Member
+            </button>
+          ) : (
+            <button type="submit" className="btn btn-primary w-full">
+              Submit Post
+            </button>
+          )}
         </div>
       </form>
     </div>

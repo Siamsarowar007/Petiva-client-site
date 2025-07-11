@@ -21,6 +21,11 @@ const Navbar = () => {
         </NavLink>
       </li>
       <li>
+        <NavLink to="/all-post" className="font-medium" activeclassname="text-orange-500">
+          All Post
+        </NavLink>
+      </li>
+      <li>
         <NavLink to="/membership" className="font-medium" activeclassname="text-orange-500">
           Membership
         </NavLink>
