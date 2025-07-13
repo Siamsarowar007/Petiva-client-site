@@ -1,6 +1,6 @@
-import React, { use, useEffect, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../../firebase/firebase.init';
 
 
@@ -32,39 +32,23 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, googleProvider);
     }
 
+    const updateUserProfile = profileInfo => {
+        return updateProfile(auth.currentUser, profileInfo);
+    }
 
-    // useEffect(()=>{
-    //     const unsubscribe = onAuthStateChanged(auth , currentUser => {
-    //         setUser(currentUser);
-    //         setLoading(false);
-    //     });
 
-    //     return () =>{
-    //         unsubscribe();
-    //     }
-    // },[])
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            if (currentUser) {
-                // Temporary way to assign role
-                const tempUser = {
-                    ...currentUser,
-                    role: currentUser.email === "admin@admin.com" ? "admin" : "user",
-                    isMember: false // Optional: For membership
-                };
-                setUser(tempUser);
-            } else {
-                setUser(null);
-            }
-
+    useEffect(()=>{
+        const unsubscribe = onAuthStateChanged(auth , currentUser => {
+            setUser(currentUser);
+            console.log('user in the auth state change',currentUser);
+            
             setLoading(false);
         });
 
-        return () => {
+        return () =>{
             unsubscribe();
-        };
-    }, []);
+        }
+    },[])
 
 
 
@@ -75,6 +59,7 @@ const AuthProvider = ({ children }) => {
         signInUser,
         signOutUser,
         googleSignIn,
+        updateUserProfile,
     }
 
 

@@ -1,91 +1,6 @@
-// import {createBrowserRouter} from "react-router";
-// import RootLayout from "../layout/RootLayout";
-// import Home from "../pages/Home/Home/Home";
-// import AuthLayout from "../layout/AuthLayout";
-// import Login from "../pages/Authentication/Login/Login";
-// import Register from "../pages/Authentication/Register/Register";
-// import JoinUs from "../pages/JoinUs/JoinUs";
-// import Membership from "../pages/Membership/Membership";
-// import PrivateRoutes from "../routes/PrivateRoutes";
-// import DashboardLayout from "../layout/DashboardLayout";
-// import DashboardHome from "../pages/Dashboard/DashboardHome";
-// import AdminRoute from "../routes/AdminRoute";
-// import AdminDashboardHome from "../pages/Dashboard/AdminDashboardHome";
-// import AdminDashboardLayout from "../layout/AdminDashboardLayout";
-// import ManageUsers from "../pages/Dashboard/ManageUsers";
-
-
-
-
-
-// export const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     Component: RootLayout,
-//     children:[
-//         {
-//             index: true,
-//             Component: Home,
-//         },
-//         {
-//           path: '/join-us',
-//           Component: JoinUs,
-//         },
-//         {
-//           path: '/membership',
-//           Component: Membership,
-//         },
-//     ]
-//   },
-//   {
-//     path: '/',
-//     Component: AuthLayout,
-//     children:[
-//       {
-//         path: '/login',
-//         Component: Login,
-//       },
-//       {
-//         path: '/register',
-//         Component: Register,
-//       },
-//     ]
-//   },
-
-//   {
-//     path: '/dashboard',
-//     element: <PrivateRoutes>
-//       <DashboardLayout></DashboardLayout>
-//     </PrivateRoutes>,
-//     children: [
-//       {
-//         index: true,
-//         Component: DashboardHome,
-//       },
-//     ]
-//   },
-
-//   {
-//     path: 'admin-dashboard',
-//     element: <AdminRoute>
-//       <AdminDashboardLayout></AdminDashboardLayout>
-//     </AdminRoute>,
-//     children:[
-//       {
-//         index: true,
-//         Component: AdminDashboardHome,
-//       },
-//       {
-//         path: 'admin-manageUsers',
-//         Component: ManageUsers,
-//       },
-//     ]
-//   },
-// ]);
-
 import { createBrowserRouter } from "react-router";
 import RootLayout from "../layout/RootLayout";
-import Home from "../pages/Home/Home/Home";
+import HomeLayout from "../pages/Home/HomeLayout";
 import AuthLayout from "../layout/AuthLayout";
 import Login from "../pages/Authentication/Login/Login";
 import Register from "../pages/Authentication/Register/Register";
@@ -94,15 +9,20 @@ import Membership from "../pages/Membership/Membership";
 import DashboardLayout from "../layout/DashboardLayout";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
 import AdminDashboardHome from "../pages/Dashboard/AdminDashboardHome";
-import AdminDashboardLayout from "../layout/AdminDashboardLayout";
+// import AdminDashboardLayout from "../layout/AdminDashboardLayout";
 import ManageUsers from "../pages/Dashboard/ManageUsers";
 import PrivateRoutes from "../routes/PrivateRoutes";
-import AdminRoute from "../routes/AdminRoute";
+// import AdminRoute from "../routes/AdminRoute";
 import AddPost from "../pages/Dashboard/UserDashboard/AddPost";
 import MyProfile from "../pages/Dashboard/UserDashboard/MyProfile";
 import MyPost from "../pages/Dashboard/UserDashboard/MyPost";
 import CommentsPage from "../pages/Dashboard/UserDashboard/CommentsPage";
 import AllPost from "../pages/AllPost/AllPost";
+import PostDetails from "../pages/PostDetails/PostDetails";
+import EditPost from "../pages/EditPost/EditPost";
+import AdminProfile from "../pages/Dashboard/Admin/AdminProfile";
+import Report from "../pages/Dashboard/Admin/Report";
+import Announcement from "../pages/Dashboard/Admin/MakeAnnouncement";
 
 export const router = createBrowserRouter([
   {
@@ -111,11 +31,23 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: <HomeLayout />,
       },
       {
         path: "all-post",
-        element: <AllPost></AllPost>,
+        element: <AllPost />,
+      },
+      {
+        path: "post-details/:id",
+        element: <PostDetails />,
+      },
+      {
+        path: "comments/:postId",
+        element: <CommentsPage />,
+      },
+      {
+        path: "edit-post/:id",
+        element: <EditPost />,
       },
       {
         path: "join-us",
@@ -145,8 +77,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-
-  // ✅ User Dashboard
+  // User Dashboard Routes Protected by PrivateRoutes
   {
     path: "/dashboard",
     element: (
@@ -159,47 +90,66 @@ export const router = createBrowserRouter([
         index: true,
         element: <DashboardHome />,
       },
-      // Add: profile, add-post, my-posts later
       {
-        path: 'dashboard-home',
-        Component: DashboardHome ,
+        path: "dashboard-home",
+        element: <DashboardHome />,
       },
       {
-        path: 'profile',
-        Component: MyProfile ,
+        path: "profile",
+        element: <MyProfile />,
       },
       {
-        path: 'add-post',
-        Component: AddPost,
+        path: "add-post",
+        element: <AddPost />,
       },
       {
-        path: 'my-posts',
-        Component: MyPost,
+        path: "my-posts",
+        element: <MyPost />,
       },
       {
-        path: 'comments/:postId',
-        Component: CommentsPage,
+        path: "announcement/:id",
+        element: <MyPost />,
       },
-    ],
-  },
 
-  // ✅ Admin Dashboard
-  {
-    path: "/admin-dashboard",
-    element: (
-      <AdminRoute>
-        <AdminDashboardLayout />
-      </AdminRoute>
-    ),
-    children: [
       {
-        index: true,
-        element: <AdminDashboardHome />,
+        path: "admin-profile",
+        element: <AdminProfile />,
       },
       {
-        path: "admin-manageUsers",
+        path: "manage-users",
         element: <ManageUsers />,
       },
+      {
+        path: "report",
+        element: <Report />,
+      },
+      {
+        path: "comment-manage",
+        element: <Report />,
+      },
+      {
+        path: "announcement",
+        element: <Announcement />,
+      },
     ],
   },
+  // Admin Dashboard Routes Protected by AdminRoute
+  // {
+  //   path: "/admin-dashboard",
+  //   element: (
+  //     <AdminRoute>
+  //       <AdminDashboardLayout />
+  //     </AdminRoute>
+  //   ),
+  //   children: [
+  //     {
+  //       index: true,
+  //       element: <AdminDashboardHome />,
+  //     },
+  //     {
+  //       path: "admin-manageUsers",
+  //       element: <ManageUsers />,
+  //     },
+  //   ],
+  // },
 ]);

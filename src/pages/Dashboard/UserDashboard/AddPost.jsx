@@ -17,14 +17,25 @@ const AddPost = () => {
     tag: null,
   });
 
-  const tagOptions = [
-    { value: "pet-care", label: "Pet Care" },
-    { value: "adoption", label: "Adoption" },
-    { value: "nutrition", label: "Nutrition" },
-    { value: "training", label: "Training" },
-  ];
+const tagOptions = [
+  { value: "cat", label: "Cat" },
+  { value: "dog", label: "Dog" },
+  { value: "bird", label: "Bird" },
+  { value: "vet", label: "Vet" },
+  { value: "food", label: "Food" },
+  { value: "training", label: "Training" },
+  { value: "grooming", label: "Grooming" },
+  { value: "adoption", label: "Adoption" },
+  { value: "pet-care", label: "Pet Care" },
+  { value: "illness", label: "Illness" },
+  { value: "vaccination", label: "Vaccination" },
+  { value: "behavior", label: "Behavior" },
+  { value: "accessories", label: "Accessories" },
+  { value: "rescue", label: "Rescue" },
+  { value: "nutrition", label: "Nutrition" },
+];
 
-  // ✅ Fetch user's post count
+
   const {
     data: postCountData,
     isLoading,
@@ -41,7 +52,6 @@ const AddPost = () => {
   const postCount = postCountData || 0;
   const isLimitReached = postCount >= 5;
 
-  // ✅ Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -85,7 +95,6 @@ const AddPost = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {/* ✅ User Info */}
       <div className="flex flex-col items-center gap-2 mb-8">
         <img
           src={user?.photoURL}
@@ -98,19 +107,16 @@ const AddPost = () => {
 
       <h2 className="text-3xl font-bold mb-6 text-center">Add New Post</h2>
 
-      {/* ✅ Post limit warning */}
       {isLimitReached && (
         <div className="mb-6 text-center text-red-500 font-medium">
           ⚠️ You’ve reached the limit of 5 posts.
         </div>
       )}
 
-      {/* ✅ Post Form */}
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
-        {/* Title */}
         <div>
           <label className="font-medium">Post Title</label>
           <input
@@ -122,7 +128,6 @@ const AddPost = () => {
           />
         </div>
 
-        {/* Tag */}
         <div>
           <label className="font-medium">Select Tag</label>
           <Select
@@ -133,7 +138,6 @@ const AddPost = () => {
           />
         </div>
 
-        {/* Description */}
         <div className="lg:col-span-2">
           <label className="font-medium">Description</label>
           <textarea
@@ -146,7 +150,6 @@ const AddPost = () => {
           ></textarea>
         </div>
 
-        {/* Vote fields */}
         <div>
           <label className="font-medium">UpVote (default)</label>
           <input
@@ -166,7 +169,6 @@ const AddPost = () => {
           />
         </div>
 
-        {/* ✅ Submit / Membership Button */}
         <div className="lg:col-span-2 w-full">
           {isLimitReached ? (
             <button

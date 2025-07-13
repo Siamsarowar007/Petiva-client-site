@@ -1,12 +1,43 @@
-import { use } from "react";
+import { useEffect, useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { FaBell } from "react-icons/fa";
 import { AiOutlineLogout } from "react-icons/ai";
 import { AuthContext } from "../../contexts/AuthContext/AuthContext";
+import useAxios from "../../hooks/useAxios";
+import moment from "moment";
 
 const Navbar = () => {
-  const { user, signOutUser} = use(AuthContext);
+  const { user, signOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const axios = useAxios();
+
+  const [unread, setUnread] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // ✅ Unread announcements fetch
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const res = await axios.get("/announcements");
+        const all = res.data;
+        const readIds = JSON.parse(localStorage.getItem("read_announcements")) || [];
+
+        const unreadAnnouncements = all.filter(a => !readIds.includes(a._id));
+        setUnread(unreadAnnouncements);
+      } catch (err) {
+        console.error("❌ Failed to fetch announcements", err);
+      }
+    };
+
+    if (user) fetchAnnouncements();
+  }, [user]);
+
+  // ✅ Mark all as read
+  const handleMarkAllRead = () => {
+    const ids = unread.map(a => a._id);
+    localStorage.setItem("read_announcements", JSON.stringify([...ids, ...(JSON.parse(localStorage.getItem("read_announcements")) || [])]));
+    setUnread([]); // Remove from UI
+  };
 
   const handleLogout = async () => {
     await signOutUser();
@@ -16,28 +47,20 @@ const Navbar = () => {
   const navItems = (
     <>
       <li>
-        <NavLink to="/" className="font-medium" activeclassname="text-orange-500">
-          Home
-        </NavLink>
+        <NavLink to="/" className="font-medium" activeclassname="text-orange-500">Home</NavLink>
       </li>
       <li>
-        <NavLink to="/all-post" className="font-medium" activeclassname="text-orange-500">
-          All Post
-        </NavLink>
+        <NavLink to="/all-post" className="font-medium" activeclassname="text-orange-500">All Post</NavLink>
       </li>
       <li>
-        <NavLink to="/membership" className="font-medium" activeclassname="text-orange-500">
-          Membership
-        </NavLink>
+        <NavLink to="/membership" className="font-medium" activeclassname="text-orange-500">Membership</NavLink>
       </li>
     </>
   );
 
   return (
     <div className="navbar bg-base-100 shadow-sm px-4 sticky top-0 z-50">
-      {/* Navbar Start */}
       <div className="navbar-start">
-        {/* Mobile Dropdown */}
         <div className="dropdown lg:hidden">
           <label tabIndex={0} className="btn btn-ghost">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
@@ -51,29 +74,64 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Logo */}
         <NavLink to="/" className="btn btn-ghost text-xl font-bold">
           Pet<span className="text-orange-500">House</span>
         </NavLink>
       </div>
 
-      {/* Navbar Center (Desktop Menu) */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           {navItems}
         </ul>
       </div>
 
-      {/* Navbar End */}
-      <div className="navbar-end flex items-center gap-3">
-        {/* Notification Icon */}
+      <div className="navbar-end flex items-center gap-3 relative">
+        {/* 🔔 Bell Icon */}
         {user && (
-          <button className="btn btn-ghost text-xl" title="Notifications">
-            <FaBell />
-          </button>
+          <div className="relative">
+            <button
+              className="btn btn-ghost text-xl relative"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              title="Notifications"
+            >
+              <FaBell />
+              {unread.length > 0 && (
+                <span className="badge badge-sm bg-red-500 text-white absolute -top-1 -right-1">
+                  {unread.length}
+                </span>
+              )}
+            </button>
+
+            {/* 🔽 Notification Dropdown */}
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-300 shadow-lg rounded-md z-50">
+                <div className="px-4 py-2 font-semibold border-b">Notifications</div>
+                <div className="max-h-64 overflow-y-auto">
+                  {unread.length > 0 ? (
+                    unread.map(a => (
+                      <div key={a._id} className="p-3 border-b">
+                        <p className="font-medium">{a.title}</p>
+                        <p className="text-xs text-gray-500">{moment(a.createdAt).fromNow()}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-3 text-center text-gray-500">No new notifications</div>
+                  )}
+                </div>
+                {unread.length > 0 && (
+                  <button
+                    onClick={handleMarkAllRead}
+                    className="text-blue-500 hover:underline w-full py-2 text-sm"
+                  >
+                    Mark all as read
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         )}
 
-        {/* Join Us or Profile */}
+        {/* 🔐 Login/Profile */}
         {!user ? (
           <NavLink to="/join-us" className="btn btn-outline btn-sm">
             Join Us
@@ -104,4 +162,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

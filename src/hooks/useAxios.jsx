@@ -1,4 +1,4 @@
-// src/hooks/useAxios.js
+
 import axios from "axios";
 
 const axiosInstance = axios.create({
