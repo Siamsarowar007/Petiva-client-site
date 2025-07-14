@@ -68,20 +68,20 @@ const MyPost = () => {
               <th className="px-4 py-3 text-left">#</th>
               <th className="px-4 py-3 text-left">Title</th>
               <th className="px-4 py-3 text-left">Tag</th>
-              <th className="px-4 py-3 text-center">Votes</th>
+              {/* <th className="px-4 py-3 text-center">Votes</th> */}
               <th className="px-4 py-3 text-center">Comments</th>
               <th className="px-4 py-3 text-center">Action</th>
             </tr>
           </thead>
           <tbody>
             {posts.map((post, idx) => {
-              const voteCount = (post.upVote?.length || 0) - (post.downVote?.length || 0);
+              // const voteCount = (post.upVote?.length || 0) - (post.downVote?.length || 0);
               return (
                 <tr key={post._id} className="border-b hover:bg-gray-50">
                   <td className="px-4 py-2">{idx + 1}</td>
                   <td className="px-4 py-2">{post.title}</td>
                   <td className="px-4 py-2 capitalize">{post.tag}</td>
-                  <td className="px-4 py-2 text-center">{voteCount}</td>
+                  {/* <td className="px-4 py-2 text-center">{voteCount}</td> */}
                   <td className="px-4 py-2 text-center">
                     <button
                       onClick={() => navigate(`/post-details/${post._id}`)}
