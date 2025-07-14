@@ -3,12 +3,6 @@ import { useParams } from "react-router";
 import useAxios from "../../hooks/useAxios";
 import useAuth from "../../hooks/useAuth";
 import {
-  FacebookShareButton,
-  WhatsappShareButton,
-  FacebookIcon,
-  WhatsappIcon,
-} from "react-share";
-import {
   FaThumbsUp,
   FaThumbsDown,
   FaFacebook,
@@ -19,6 +13,7 @@ import {
 } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router";
+import Loader from "../../shared/Loader/Loader";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -30,6 +25,7 @@ const PostDetails = () => {
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [commentSubmitting, setCommentSubmitting] = useState(false);
+  const [showAllComments, setShowAllComments] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -84,6 +80,10 @@ const PostDetails = () => {
     }
   };
 
+  const upVoteCount = post?.votes ? Object.values(post.votes).filter((v) => v === "up").length : 0;
+  const downVoteCount = post?.votes ? Object.values(post.votes).filter((v) => v === "down").length : 0;
+  const userVote = post?.votes ? post.votes[user?.uid] : null;
+
   const handleVote = async (type) => {
     if (!user) {
       alert("Please login to vote");
@@ -97,6 +97,10 @@ const PostDetails = () => {
 
       setPost((prev) => ({
         ...prev,
+        votes: {
+          ...(prev.votes || {}),
+          [user.uid]: res.data.userVote,
+        },
         upVote: res.data.upVote,
         downVote: res.data.downVote,
         userVote: res.data.userVote,
@@ -106,85 +110,66 @@ const PostDetails = () => {
     }
   };
 
-  if (loading) return <div className="text-center py-10">Loading post...</div>;
+  if (loading) return <div className="text-center py-10"><Loader /></div>;
   if (!post) return <div className="text-center py-10">Post not found.</div>;
 
   return (
-    <div className="mt-16 sm:mt-[80px] px-4 py-6 overflow-hidden">
-      <div className="bg-base-200 p-6 md:p-8 rounded-xl shadow-xl max-w-4xl mx-auto border border-orange-300 hover:shadow-orange-500 transition-shadow duration-300">
+    <div className="mt-20 px-4 py-6 overflow-hidden">
+      <div className="bg-white p-6 md:p-8 rounded-xl shadow-md max-w-4xl mx-auto border border-gray-200">
         {/* Author Info */}
         <div className="flex items-center gap-4 mb-4">
           <img
-            className="h-14 w-14 rounded-full border-2 border-green-500"
+            className="h-14 w-14 rounded-full border border-gray-300"
             src={post.authorPhoto || "https://i.ibb.co/VgY9pJf/avatar.png"}
             alt="Author"
           />
           <div>
-            <p className="font-bold text-orange-600">{post.authorName}</p>
-            <p className="text-sm text-green-600">
+            <p className="font-semibold text-gray-800">{post.authorName}</p>
+            <p className="text-sm text-gray-500">
               Posted on {new Date(post.postTime).toLocaleString("en-BD")}
             </p>
           </div>
         </div>
 
+        {/* Tag Display */}
+        <p className="text-xs text-blue-500 font-medium mb-1 uppercase tracking-wide">#{post.tag}</p>
+
         {/* Post Content */}
-        <h1 className="text-3xl font-bold mb-2 text-green-400">{post.title}</h1>
-        <p className="text-md text-orange-600 font-semibold mb-4">#{post.tag}</p>
-        <p className="leading-relaxed mb-6 text-green-500">{post.description}</p>
+        <h1 className="text-3xl font-bold mb-4 text-gray-900">{post.title}</h1>
+        <p className="leading-relaxed mb-6 text-gray-700">{post.description}</p>
 
         {/* Vote & Share */}
-        <div className="flex flex-wrap items-center gap-6 border-t border-b border-orange-300 py-4 mb-6">
+        <div className="flex flex-wrap items-center gap-6 border-t border-b border-gray-200 py-4 mb-6">
           <button
             onClick={() => handleVote("up")}
-            className={`flex items-center gap-2 font-semibold ${
-              post.userVote === "up" ? "text-green-700" : "text-green-600"
-            }`}
+            className={`flex items-center gap-2 font-medium cursor-pointer transition-colors ${userVote === "up" ? "text-blue-600" : "text-gray-600"}`}
+            aria-label="Like"
           >
-            <FaThumbsUp /> {post.upVote?.length || 0}
-          </button>
-          <button
-            onClick={() => handleVote("down")}
-            className={`flex items-center gap-2 font-semibold ${
-              post.userVote === "down" ? "text-red-700" : "text-red-600"
-            }`}
-          >
-            <FaThumbsDown /> {post.downVote?.length || 0}
+            <FaThumbsUp /> {upVoteCount}
           </button>
 
-          <div className="flex items-center gap-4 ml-auto text-xl text-blue-600">
-            <a
-              href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaFacebook className="hover:text-blue-800 transition" />
+          <button
+            onClick={() => handleVote("down")}
+            className={`flex items-center gap-2 font-medium cursor-pointer transition-colors ${userVote === "down" ? "text-red-500" : "text-gray-600"}`}
+            aria-label="Dislike"
+          >
+            <FaThumbsDown /> {downVoteCount}
+          </button>
+
+          <div className="flex items-center gap-4 ml-auto text-xl text-gray-600">
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`} target="_blank" rel="noopener noreferrer">
+              <FaFacebook className="hover:text-blue-600 transition" />
             </a>
-            <a
-              href={`https://www.linkedin.com/shareArticle?mini=true&url=${window.location.href}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaLinkedin className="hover:text-blue-900 transition" />
+            <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${window.location.href}`} target="_blank" rel="noopener noreferrer">
+              <FaLinkedin className="hover:text-blue-800 transition" />
             </a>
-            <a
-              href={`https://dev.to/new?prefill=${window.location.href}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={`https://dev.to/new?prefill=${window.location.href}`} target="_blank" rel="noopener noreferrer">
               <FaDev className="hover:text-gray-800 transition" />
             </a>
-            <a
-              href={`https://github.com/`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={`https://github.com/`} target="_blank" rel="noopener noreferrer">
               <FaGithub className="hover:text-black transition" />
             </a>
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(window.location.href)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={`https://wa.me/?text=${encodeURIComponent(window.location.href)}`} target="_blank" rel="noopener noreferrer">
               <FaWhatsapp className="hover:text-green-500 transition" />
             </a>
           </div>
@@ -192,7 +177,7 @@ const PostDetails = () => {
 
         {/* Comments Section */}
         <div>
-          <h2 className="text-2xl font-bold text-orange-700 mb-4">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
             Comments ({comments.length})
           </h2>
 
@@ -201,7 +186,7 @@ const PostDetails = () => {
               <textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                className="w-full p-4 border-2 border-green-400 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Write a comment..."
                 rows={4}
                 required
@@ -209,7 +194,7 @@ const PostDetails = () => {
               <div className="flex justify-end items-center mt-2">
                 <button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-semibold"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium"
                   disabled={commentSubmitting}
                 >
                   {commentSubmitting ? "Sending..." : "Comment"}
@@ -217,38 +202,42 @@ const PostDetails = () => {
               </div>
             </form>
           ) : (
-            <p className="text-red-600 font-semibold mb-6">
-              Please log in to comment.
-            </p>
+            <p className="text-red-500 font-medium mb-6">Please log in to comment.</p>
           )}
 
           <AnimatePresence>
             <div className="space-y-4 overflow-hidden">
-              {comments.map((comment) => (
+              {(showAllComments ? comments : comments.slice(0, 3)).map((comment) => (
                 <motion.div
                   key={comment._id || comment.time}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="p-4 rounded-md bg-green-50 border-l-4 border-green-400"
+                  className="p-4 rounded-md bg-gray-50 border border-gray-200"
                 >
-                  <p className="font-semibold text-green-800">
-                    {comment.authorName || "Anonymous"}
-                  </p>
-                  <p className="text-green-700 break-words">{comment.text}</p>
-                  <p className="text-xs text-gray-400">
-                    {new Date(comment.time).toLocaleString("en-BD")}
-                  </p>
+                  <p className="font-semibold text-gray-800">{comment.authorName || "Anonymous"}</p>
+                  <p className="text-gray-700 break-words">{comment.text}</p>
+                  <p className="text-xs text-gray-400">{new Date(comment.time).toLocaleString("en-BD")}</p>
                 </motion.div>
               ))}
+              {comments.length > 3 && !showAllComments && (
+                <div className="text-center mt-4">
+                  <button
+                    onClick={() => setShowAllComments(true)}
+                    className="text-blue-600 hover:underline text-sm"
+                  >
+                    View all comments
+                  </button>
+                </div>
+              )}
             </div>
           </AnimatePresence>
         </div>
 
         <Link
-          to="/dashboard/my-Posts"
-          className="inline-block mt-8 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-semibold transition duration-300"
+          to="/all-post"
+          className="inline-block mt-8 bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-md font-medium transition duration-300"
         >
           ← Back to All Posts
         </Link>
