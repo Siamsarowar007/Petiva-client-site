@@ -3,10 +3,21 @@ import useAxios from "../../hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 
 const tags = [
-  { value: "pet-care", label: "Pet Care" },
-  { value: "adoption", label: "Adoption" },
-  { value: "nutrition", label: "Nutrition" },
+  { value: "cat", label: "Cat" },
+  { value: "dog", label: "Dog" },
+  { value: "bird", label: "Bird" },
+  { value: "vet", label: "Vet" },
+  { value: "food", label: "Food" },
   { value: "training", label: "Training" },
+  { value: "grooming", label: "Grooming" },
+  { value: "adoption", label: "Adoption" },
+  { value: "pet-care", label: "Pet Care" },
+  { value: "illness", label: "Illness" },
+  { value: "vaccination", label: "Vaccination" },
+  { value: "behavior", label: "Behavior" },
+  { value: "accessories", label: "Accessories" },
+  { value: "rescue", label: "Rescue" },
+  { value: "nutrition", label: "Nutrition" },
 ];
 
 const TagsSection = () => {

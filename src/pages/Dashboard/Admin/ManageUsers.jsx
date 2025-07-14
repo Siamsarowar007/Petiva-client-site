@@ -6,10 +6,11 @@ const ManageUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // সার্চ টার্ম অনুযায়ী ইউজার ডেটা লোড
   const fetchUsers = async (search = "") => {
     setLoading(true);
     try {
-      const res = await axios.get(`/users?search=${search}`);
+      const res = await axios.get(`/users?search=${search}`); // backend route অনুযায়ী ঠিক করো
       setUsers(res.data);
     } catch (err) {
       console.error("Failed to fetch users", err);
@@ -22,6 +23,7 @@ const ManageUsers = () => {
     fetchUsers();
   }, []);
 
+  // Make Admin API call
   const makeAdmin = async (email) => {
     try {
       await axios.patch(`/users/make-admin/${email}`);
@@ -79,14 +81,15 @@ const ManageUsers = () => {
                     )}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {!user.isAdmin ? (
+                    {!user.isAdmin && (
                       <button
                         onClick={() => makeAdmin(user.email)}
                         className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                       >
                         Make Admin
                       </button>
-                    ) : (
+                    )}
+                    {user.isAdmin && (
                       <span className="text-green-600 font-semibold">Admin</span>
                     )}
                   </td>
