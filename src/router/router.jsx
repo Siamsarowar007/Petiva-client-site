@@ -18,11 +18,12 @@ import MyProfile from "../pages/Dashboard/UserDashboard/MyProfile";
 import MyPost from "../pages/Dashboard/UserDashboard/MyPost";
 import CommentsPage from "../pages/Dashboard/UserDashboard/CommentsPage";
 import AllPost from "../pages/AllPost/AllPost";
-import PostDetails from "../pages/PostDetails/PostDetails";
+// import PostDetails from "../pages/PostDetails/PostDetails";
 import EditPost from "../pages/EditPost/EditPost";
 import AdminProfile from "../pages/Dashboard/Admin/AdminProfile";
 import Report from "../pages/Dashboard/Admin/Report";
 import Announcement from "../pages/Dashboard/Admin/MakeAnnouncement";
+import PostDetails from "../pages/AllPost/PostDetails";
 
 export const router = createBrowserRouter([
   {
