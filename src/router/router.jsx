@@ -8,22 +8,20 @@ import JoinUs from "../pages/JoinUs/JoinUs";
 import Membership from "../pages/Membership/Membership";
 import DashboardLayout from "../layout/DashboardLayout";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
-import AdminDashboardHome from "../pages/Dashboard/AdminDashboardHome";
-// import AdminDashboardLayout from "../layout/AdminDashboardLayout";
 import ManageUsers from "../pages/Dashboard/ManageUsers";
 import PrivateRoutes from "../routes/PrivateRoutes";
-// import AdminRoute from "../routes/AdminRoute";
 import AddPost from "../pages/Dashboard/UserDashboard/AddPost";
 import MyProfile from "../pages/Dashboard/UserDashboard/MyProfile";
 import MyPost from "../pages/Dashboard/UserDashboard/MyPost";
 import CommentsPage from "../pages/Dashboard/UserDashboard/CommentsPage";
 import AllPost from "../pages/AllPost/AllPost";
-// import PostDetails from "../pages/PostDetails/PostDetails";
 import EditPost from "../pages/EditPost/EditPost";
 import AdminProfile from "../pages/Dashboard/Admin/AdminProfile";
 import Report from "../pages/Dashboard/Admin/Report";
 import Announcement from "../pages/Dashboard/Admin/MakeAnnouncement";
 import PostDetails from "../pages/AllPost/PostDetails";
+import CommentManage from "../pages/Dashboard/Admin/CommentManage";
+
 
 export const router = createBrowserRouter([
   {
@@ -116,22 +114,24 @@ export const router = createBrowserRouter([
         path: "admin-profile",
         element: <AdminProfile />,
       },
+       {
+        path: "announcement",
+        element: <Announcement />,
+      },
       {
         path: "manage-users",
         element: <ManageUsers />,
       },
       {
-        path: "report",
-        element: <Report />,
-      },
-      {
         path: "comment-manage",
-        element: <Report />,
+        element: <CommentManage></CommentManage>,
       },
       {
-        path: "announcement",
-        element: <Announcement />,
+        path: "report",
+        element: <Report></Report>,
       },
+  
+     
     ],
   },
   // Admin Dashboard Routes Protected by AdminRoute

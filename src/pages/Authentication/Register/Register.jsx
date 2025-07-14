@@ -1,154 +1,111 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../hooks/useAuth';
 import SocialLogin from '../SocialLogin/SocialLogin';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
-// import axios from 'axios';
-// import useAxios from '../../../hooks/useAxios';
-// import useAuth from '../../../hooks/useAuth';
+import axios from 'axios';
 
+
+import useAxios from '../../../hooks/useAxios';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { createUser, } = useAuth();
-    // const [profilePic, setProfilePic] = useState('');
-    // const axiosInstance = useAxios();
+    const { createUser } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const from = location.state?.from || '/';
 
+    const [uploading, setUploading] = useState(false);
 
+    const imgbbAPIKey = import.meta.env.VITE_IMGBB_API_KEY;
 
-    const onSubmit = data => {
-        console.log(data);
+    
+    const axiosInstance = useAxios();
 
-        createUser(data.email, data.password)
-            .then(async (result) => {
-                // console.log(result.user);
-                const user = result.user;
+    const onSubmit = async data => {
+        try {
+            setUploading(true);
+            const image = data.image[0];
 
-                updateProfile(user, {
-                    displayName: data.name,
-                })
-                    .then(() => {
-                        console.log("User profile updated");
-                        navigate(from);
-                    })
+            let imageURL = '';
 
+            if (image) {
+                const formData = new FormData();
+                formData.append('image', image);
 
-                // navigate(from);
-            })
+                const imageRes = await axios.post(
+                    `https://api.imgbb.com/1/upload?key=${imgbbAPIKey}`,
+                    formData
+                );
 
-            .catch(error => {
-                console.log(error)
-            })
+                imageURL = imageRes.data.data.url;
+            }
 
-        //         // update userinfo in the database
-        //         const userInfo = {
-        //             email: data.email,
-        //             role: 'user', // default role
-        //             created_at: new Date().toISOString(),
-        //             last_log_in: new Date().toISOString()
-        //         }
+            const result = await createUser(data.email, data.password);
+            const user = result.user;
 
-        //         const userRes = await axiosInstance.post('/users', userInfo);
-        //         console.log(userRes.data);
+            await updateProfile(user, {
+                displayName: data.name,
+                photoURL: imageURL
+            });
 
-        //         // update user profile in firebase
-        //         const userProfile = {
-        //             displayName: data.name,
-        //             photoURL: profilePic
-        //         }
-        //         updateUserProfile(userProfile)
-        //             .then(() => {
-        //                 console.log('profile name pic updated');
-        //                 navigate(from);
-        //             })
-        //             .catch(error => {
-        //                 console.log(error)
-        //             })
+            const userInfo = {
+                name: data.name,
+                email: data.email,
+                photo: imageURL,
+                role: 'user',
+                created_at: new Date().toISOString(),
+                last_log_in: new Date().toISOString()
+            };
 
-        //     })
-        //     .catch(error => {
-        //         console.error(error);
-        //     })
-    }
+            
+            await axiosInstance.post('/users', userInfo);
 
-    // const handleImageUpload = async (e) => {
-    //     const image = e.target.files[0];
-    //     console.log(image)
-
-    //     const formData = new FormData();
-    //     formData.append('image', image);
-
-
-    //     const imagUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`
-    //     const res = await axios.post(imagUploadUrl, formData)
-
-    //     setProfilePic(res.data.data.url);
-
-    // }
+            navigate(from);
+        } catch (err) {
+            console.error('Registration failed:', err);
+        } finally {
+            setUploading(false);
+        }
+    };
 
     return (
-
-        <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        <div className="card bg-base-100 w-full max-w-sm shadow-2xl">
             <div className="card-body">
-                <h1 className="text-5xl font-bold">Create Account</h1>
+                <h1 className="text-3xl font-bold">Create Account</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <fieldset className="fieldset">
-                        {/* name field */}
-                        <label className="label">Your Name</label>
-                        <input type="text"
-                            {...register('name', { required: true })}
-                            className="input" placeholder="Your Name" />
-                        {
-                            errors.email?.type === 'required' && <p className='text-red-500'>Name is required</p>
-                        }
+                    <label className="label">Your Name</label>
+                    <input type="text" {...register('name', { required: true })} className="input" />
+                    {errors.name && <p className="text-red-500">Name is required</p>}
 
-                        {/* {selectedImage && (
-                            <div className="mt-2">
-                                <img
-                                    src={URL.createObjectURL(selectedImage)}
-                                    alt="Preview"
-                                    className="h-24 rounded"
-                                />
-                            </div>
-                        )} */}
+                    <label className="label">Upload Image (optional)</label>
+                    <input type="file" {...register('image')} className="file-input" />
 
-                        {/* name field */}
-                        <label className="label">Your Name</label>
-                        <input type="file"
-                            // onChange={handleImageUpload}
-                            className="input" placeholder="Your Profile picture" />
+                    <label className="label">Email</label>
+                    <input type="email" {...register('email', { required: true })} className="input" />
+                    {errors.email && <p className="text-red-500">Email is required</p>}
 
-                        {/* email field */}
-                        <label className="label">Email</label>
-                        <input type="email"
-                            {...register('email', { required: true })}
-                            className="input" placeholder="Email" />
-                        {
-                            errors.email?.type === 'required' && <p className='text-red-500'>Email is required</p>
-                        }
-                        {/* password field*/}
-                        <label className="label">Password</label>
-                        <input type="password" {...register('password', { required: true, minLength: 6 })} className="input" placeholder="Password" />
-                        {
-                            errors.password?.type === 'required' && <p className='text-red-500'>Password is required</p>
-                        }
-                        {
-                            errors.password?.type === 'minLength' && <p className='text-red-500'>Password must be 6 characters or longer</p>
-                        }
+                    <label className="label">Password</label>
+                    <input type="password" {...register('password', { required: true, minLength: 6 })} className="input" />
+                    {errors.password?.type === 'required' && <p className="text-red-500">Password is required</p>}
+                    {errors.password?.type === 'minLength' && <p className="text-red-500">Minimum 6 characters</p>}
 
-                        <div><a className="link link-hover">Forgot password?</a></div>
-                        <button className="btn btn-primary text-black mt-4">Register</button>
-                    </fieldset>
-                    <p><small>Already have an account? <Link state={{ from }} className="btn btn-link" to="/login">Login</Link></small></p>
+                    <button className="btn btn-primary mt-4" disabled={uploading}>
+                        {uploading ? 'Registering...' : 'Register'}
+                    </button>
+
+                    <p className="mt-2">
+                        Already have an account? <Link className="link text-blue-600" to="/login" state={{ from }}>Login</Link>
+                    </p>
                 </form>
-                <SocialLogin></SocialLogin>
+
+                <div className="divider">OR</div>
+                <SocialLogin />
             </div>
         </div>
     );
 };
 
 export default Register;
+
