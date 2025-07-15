@@ -13,14 +13,16 @@ import PrivateRoutes from "../routes/PrivateRoutes";
 import AddPost from "../pages/Dashboard/UserDashboard/AddPost";
 import MyProfile from "../pages/Dashboard/UserDashboard/MyProfile";
 import MyPost from "../pages/Dashboard/UserDashboard/MyPost";
-import CommentsPage from "../pages/Dashboard/UserDashboard/CommentsPage";
+// import CommentsPage from "../pages/Dashboard/UserDashboard/CommentsPage";
 import AllPost from "../pages/AllPost/AllPost";
 import EditPost from "../pages/EditPost/EditPost";
 import AdminProfile from "../pages/Dashboard/Admin/AdminProfile";
-import Report from "../pages/Dashboard/Admin/Report";
+// import Report from "../pages/Dashboard/Admin/Report";
 import Announcement from "../pages/Dashboard/Admin/MakeAnnouncement";
 import PostDetails from "../pages/AllPost/PostDetails";
-import CommentManage from "../pages/Dashboard/Admin/CommentManage";
+// import CommentManage from "../pages/Dashboard/Admin/CommentManage";
+import AdminReportedComments from "../pages/Dashboard/Admin/AdminReportedComments";
+import CommentReportPage from "../pages/AllPost/CommentReportPage";
 
 
 export const router = createBrowserRouter([
@@ -42,7 +44,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "comments/:postId",
-        element: <CommentsPage />,
+        element: <CommentReportPage></CommentReportPage>,
       },
       {
         path: "edit-post/:id",
@@ -122,15 +124,14 @@ export const router = createBrowserRouter([
         path: "manage-users",
         element: <ManageUsers />,
       },
+      // {
+      //   path: "comment-manage",
+      //   element: <CommentManage></CommentManage>,
+      // },
       {
-        path: "comment-manage",
-        element: <CommentManage></CommentManage>,
-      },
-      {
-        path: "report",
-        element: <Report></Report>,
-      },
-  
+        path:"admin-report",
+        element:<AdminReportedComments></AdminReportedComments>
+      }
      
     ],
   },

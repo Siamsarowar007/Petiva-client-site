@@ -66,21 +66,13 @@ const DashboardLayout = () => {
               My Posts
             </NavLink>
           </li>
-            <h2 className="font-bold text-lg my-6">Admin</h2>
+          <h2 className="font-bold text-lg my-6">Admin</h2>
           <li>
             <NavLink
               to="/dashboard/admin-profile"
               className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
             >
               Admin Profile
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/dashboard/announcement"
-              className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
-            >
-             Make Announcement
             </NavLink>
           </li>
           <li>
@@ -93,20 +85,30 @@ const DashboardLayout = () => {
           </li>
           <li>
             <NavLink
+              to="/dashboard/announcement"
+              className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
+            >
+              Make Announcement
+            </NavLink>
+          </li>
+
+          {/* <li>
+            <NavLink
               to="/dashboard/comment-manage"
               className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
             >
               Comment Manage
             </NavLink>
-          </li>
+          </li> */}
           <li>
             <NavLink
-              to="/dashboard/report"
+              to="/dashboard/admin-report"
               className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
             >
               Reported Comments
             </NavLink>
           </li>
+
 
         </ul>
       </div>

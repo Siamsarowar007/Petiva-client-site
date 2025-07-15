@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Loader from "../../../shared/Loader/Loader";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // সার্চ টার্ম অনুযায়ী ইউজার ডেটা লোড
+  
   const fetchUsers = async (search = "") => {
     setLoading(true);
     try {
-      const res = await axios.get(`/users?search=${search}`); // backend route অনুযায়ী ঠিক করো
+      const res = await axios.get(`/users?search=${search}`); 
       setUsers(res.data);
     } catch (err) {
       console.error("Failed to fetch users", err);
@@ -50,7 +51,7 @@ const ManageUsers = () => {
       />
 
       {loading ? (
-        <p>Loading...</p>
+        <p><Loader></Loader></p>
       ) : (
         <table className="w-full table-auto border-collapse border border-gray-300">
           <thead>
@@ -64,7 +65,7 @@ const ManageUsers = () => {
           <tbody>
             {users.length === 0 ? (
               <tr>
-                <td colSpan="4" className="text-center py-4">
+                <td colSpan="4" className="text-center text-xl py-4 my-16">
                   No users found.
                 </td>
               </tr>

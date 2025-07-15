@@ -25,7 +25,7 @@ const Navbar = () => {
         const unreadAnnouncements = all.filter(a => !readIds.includes(a._id));
         setUnread(unreadAnnouncements);
       } catch (err) {
-        console.error("❌ Failed to fetch announcements", err);
+        console.error(" Failed to fetch announcements", err);
       }
     };
 
@@ -86,7 +86,7 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end flex items-center gap-3 relative">
-        {/* 🔔 Bell Icon */}
+        {/*  Bell Icon */}
         {user && (
           <div className="relative">
             <button
@@ -102,7 +102,7 @@ const Navbar = () => {
               )}
             </button>
 
-            {/* 🔽 Notification Dropdown */}
+            {/*  Notification Dropdown */}
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-300 shadow-lg rounded-md z-50">
                 <div className="px-4 py-2 font-semibold border-b">Notifications</div>
@@ -131,7 +131,7 @@ const Navbar = () => {
           </div>
         )}
 
-        {/* 🔐 Login/Profile */}
+        {/*  Login/Profile */}
         {!user ? (
           <NavLink to="/join-us" className="btn btn-outline btn-sm">
             Join Us
