@@ -1,44 +1,57 @@
 import React from "react";
-import { useSearchParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
 import Login from "../Authentication/Login/Login";
 import Register from "../Authentication/Register/Register";
 
-
 const JoinUs = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const type = searchParams.get("type") || "login"; 
+  const type = searchParams.get("type") || "login";
+
   const switchToLogin = () => setSearchParams({ type: "login" });
   const switchToRegister = () => setSearchParams({ type: "register" });
 
+  const isLogin = type === "login";
+
   return (
     <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gray-50 p-6 gap-10">
-      
-      {/* Left Side: Website Description */}
+      {/* Left Side: Dynamic Description */}
       <div className="max-w-md text-center lg:text-left space-y-6">
         <h1 className="text-4xl font-extrabold text-gray-800">
-          Welcome to PetHouse
+          {isLogin ? "Welcome Back to PetHouse" : "Join PetHouse Today"}
         </h1>
         <p className="text-gray-600 text-lg">
-          Discover the best pet care platform to find loving homes, memberships, and community support.
-          Join thousands of happy pet lovers today!
+          {isLogin
+            ? "Access your dashboard, track your pets, and stay updated with the community."
+            : "Register now to explore memberships, adopt pets, and connect with loving pet owners."}
         </p>
         <ul className="list-disc list-inside text-gray-700 space-y-2">
-          <li>Easy and fast registration</li>
-          <li>Exclusive membership benefits</li>
-          <li>Real-time notifications and updates</li>
-          <li>Connect with a loving pet community</li>
+          {isLogin ? (
+            <>
+              <li>Secure & fast login</li>
+              <li>Manage your profile & pets</li>
+              <li>Track your activity and messages</li>
+              <li>Stay connected with pet owners</li>
+            </>
+          ) : (
+            <>
+              <li>Quick and easy registration</li>
+              <li>Earn badges & join memberships</li>
+              <li>Adopt or list pets</li>
+              <li>Get real-time updates</li>
+            </>
+          )}
         </ul>
       </div>
 
-      {/* Right Side: Login/Register Tabs and Forms */}
-      <div className="w-full bg-gray-50  rounded-lg shadow-sm ">
+      {/* Right Side: Auth Form */}
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         {/* Tabs */}
-        <div className="flex justify-center  space-x-4">
+        <div className="flex justify-center space-x-4 mb-6">
           <button
             onClick={switchToLogin}
-            className={`px-4 py-2 font-semibold rounded ${
-              type === "login"
-                ? "bg-orange-500 text-white"
+            className={`transition-all duration-300 px-5 py-2 font-semibold rounded-md shadow-sm ${
+              isLogin
+                ? "bg-orange-500 text-white scale-105"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
@@ -46,9 +59,9 @@ const JoinUs = () => {
           </button>
           <button
             onClick={switchToRegister}
-            className={`px-4 py-2 font-semibold rounded ${
-              type === "register"
-                ? "bg-orange-500 text-white"
+            className={`transition-all duration-300 px-5 py-2 font-semibold rounded-md shadow-sm ${
+              !isLogin
+                ? "bg-green-500 text-white scale-105"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
@@ -58,7 +71,11 @@ const JoinUs = () => {
 
         {/* Form Section */}
         <div>
-          {type === "login" ? <Login></Login> : <Register></Register>}
+          {isLogin ? (
+            <Login btnColor="bg-orange-500 hover:bg-orange-600" />
+          ) : (
+            <Register btnColor="bg-green-500 hover:bg-green-600" />
+          )}
         </div>
       </div>
     </div>
