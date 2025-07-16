@@ -112,13 +112,13 @@ const Footer = () => {
                 {/* Logo & About */}
                 <div>
                     <h2 className="text-2xl font-bold text-[#4CA3B8] mb-3">Petiva</h2>
-                    <p className="text-sm leading-6">
+                    <p className="text-sm font-bold leading-6">
                         Empowering pet lovers and caretakers to connect, share, and learn together. Join our community of animal enthusiasts.
                     </p>
                     {/* Social Icons */}
                     <div className="flex gap-3 mt-4">
                         <a
-                            href="https://facebook.com"
+                            href="https://www.facebook.com/share/1DgaZ1iQHY/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-[#4CA3B8]/10 p-2 rounded-full text-[#4CA3B8] hover:scale-110 transition-transform duration-300"
@@ -126,7 +126,7 @@ const Footer = () => {
                             <FaFacebookF />
                         </a>
                         <a
-                            href="https://twitter.com"
+                            href="https://x.com/Siamsarowar007?t=Ztc-q4lGS17esWux1DqQzw&s=09"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-[#4CA3B8]/10 p-2 rounded-full text-[#4CA3B8] hover:scale-110 transition-transform duration-300"
@@ -134,7 +134,7 @@ const Footer = () => {
                             <FaTwitter />
                         </a>
                         <a
-                            href="https://instagram.com"
+                            href="https://www.instagram.com/siam_sarowar?igsh=azJqdnNjYWdmeXJn"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-[#4CA3B8]/10 p-2 rounded-full text-[#4CA3B8] hover:scale-110 transition-transform duration-300"
@@ -142,7 +142,7 @@ const Footer = () => {
                             <FaInstagram />
                         </a>
                         <a
-                            href="https://linkedin.com"
+                            href="https://www.linkedin.com/in/saroar-jahan-siam007/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-[#4CA3B8]/10 p-2 rounded-full text-[#4CA3B8] hover:scale-110 transition-transform duration-300"
@@ -150,7 +150,7 @@ const Footer = () => {
                             <FaLinkedinIn />
                         </a>
                         <a
-                            href="https://youtube.com"
+                            href="https://github.com/Siamsarowar007/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="bg-[#4CA3B8]/10 p-2 rounded-full text-[#4CA3B8] hover:scale-110 transition-transform duration-300"
@@ -165,19 +165,19 @@ const Footer = () => {
                     <h3 className="text-lg font-semibold text-[#4CA3B8] mb-4">Quick Links</h3>
                     <ul className="space-y-2 text-sm">
                         <li>
-                            <a href="/" className="hover:text-[#4CA3B8] transition-all duration-300">• Home</a>
+                            <a href="/" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• Home</a>
                         </li>
                         <li>
-                            <a href="/all-post" className="hover:text-[#4CA3B8] transition-all duration-300">• All Post</a>
+                            <a href="/all-post" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• All Post</a>
                         </li>
                         <li>
-                            <a href="/membership" className="hover:text-[#4CA3B8] transition-all duration-300">• Membership</a>
+                            <a href="/membership" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• Membership</a>
                         </li>
                         <li>
-                            <a href="/about" className="hover:text-[#4CA3B8] transition-all duration-300">• About</a>
+                            <a href="/about" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• About</a>
                         </li>
                         <li>
-                            <a href="/support" className="hover:text-[#4CA3B8] transition-all duration-300">• Support</a>
+                            <a href="/support" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• Support</a>
                         </li>
 
                     </ul>
@@ -188,20 +188,20 @@ const Footer = () => {
                     <h3 className="text-lg font-semibold text-[#4CA3B8] mb-4">Our Services</h3>
                     <ul className="space-y-2 text-sm">
                         <li>
-                            <a href="/dashboard/dashboard-home" className="hover:text-[#4CA3B8] transition-all duration-300">• Home Dashboard</a>
+                            <a href="/dashboard/dashboard-home" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• Home Dashboard</a>
                         </li>
                         <li>
-                            <a href="/dashboard/profile" className="hover:text-[#4CA3B8] transition-all duration-300">• User Dashboard</a>
+                            <a href="/dashboard/profile" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• User Dashboard</a>
                         </li>
                         <li>
-                            <a href="/dashboard/add-post" className="hover:text-[#4CA3B8] transition-all duration-300">• Add Post</a>
+                            <a href="/dashboard/add-post" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• Add Post</a>
                         </li>
                         <li>
-                            <a href="/dashboard/my-posts" className="hover:text-[#4CA3B8] transition-all duration-300">• My Post</a>
+                            <a href="/dashboard/my-posts" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• My Post</a>
                         </li>
 
                         <li>
-                            <a href="/dashboard/payment-membership" className="hover:text-[#4CA3B8] transition-all duration-300">• Membership</a>
+                            <a href="/dashboard/payment-membership" className="hover:text-[#4CA3B8] font-bold transition-all duration-300">• Membership</a>
                         </li>
                     </ul>
                 </div>
@@ -210,18 +210,18 @@ const Footer = () => {
                 <div>
                     <h3 className="text-lg font-semibold text-[#4CA3B8] mb-4">Contact Info</h3>
                     <ul className="text-sm space-y-3">
-                        <li className="flex items-center gap-2 hover:text-[#4CA3B8] transition-all duration-300">
+                        <li className="flex items-center gap-2 hover:text-[#4CA3B8] font-bold transition-all duration-300">
                             <FaPhone /> +88 01740 000000
                         </li>
-                        <li className="flex items-center gap-2 hover:text-[#4CA3B8] transition-all duration-300">
+                        <li className="flex items-center gap-2 hover:text-[#4CA3B8] font-bold transition-all duration-300">
                             <FaEnvelope /> support@petiva.com
                         </li>
-                        <li className="flex items-center gap-2 hover:text-[#4CA3B8] transition-all duration-300">
-                            <FaMapMarkerAlt /> Mymenshingh, Bangladesh
+                        <li className="flex items-center gap-2 hover:text-[#4CA3B8] font-bold transition-all duration-300">
+                            <FaMapMarkerAlt /> Mymenshingh, Bangladesh 
                         </li>
                     </ul>
                     <div className="mt-6">
-                        <p className="font-medium mb-2">Stay Updated</p>
+                        <p className="font-bold mb-2">Stay Updated</p>
                         <div className="flex items-center border border-gray-300 rounded overflow-hidden">
                             <input
                                 type="email"

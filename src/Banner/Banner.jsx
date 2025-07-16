@@ -201,6 +201,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../hooks/useAxios";
 import { FaSearch } from "react-icons/fa";
+import Loader from "../shared/Loader/Loader";
 
 const Banner = () => {
   const axios = useAxios();
@@ -278,7 +279,7 @@ const Banner = () => {
     <div>
       {/* Banner */}
       <div
-        className="relative bg-cover bg-center lg:min-h-[60vh] text-white py-24 px-4 text-center"
+        className="relative bg-cover bg-center lg:min-h-[70vh] text-white py-24 px-4 text-center"
         style={{
           backgroundImage: "url('https://i.ibb.co/m5BbDCjr/240-F-610042095-DC4m-Tiz-VUrn-XB0pdv-Lzht-Wtx-Iq-TXrrrv.jpg')",
         }}
@@ -380,7 +381,7 @@ const Banner = () => {
       {tagQuery && (
         <div className="max-w-5xl mx-auto px-4 py-10">
           {isLoading ? (
-            <p className="text-center">Loading...</p>
+            <p className="text-center"><Loader></Loader></p>
           ) : searchResults.length === 0 ? (
             <p className="text-center text-gray-500">No posts found.</p>
           ) : (
