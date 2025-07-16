@@ -55,6 +55,14 @@ const DashboardLayout = () => {
           </li>
           <li>
             <NavLink
+              to="/dashboard/payment-membership"
+              className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
+            >
+              Membership Profile
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/dashboard/add-post"
               className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
             >

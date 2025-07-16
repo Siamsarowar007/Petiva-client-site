@@ -23,6 +23,7 @@ import PaymentPage from "../pages/Membership/PaymentPage";
 import MembershipPage from "../pages/Membership/MembershipPage"
 import MembershipDashboard from "../pages/Membership/MembershipDashboard";
 
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -68,14 +69,14 @@ export const router = createBrowserRouter([
           </PrivateRoutes>
         ),
       },
-      {
-        path: "membership-dashboard",
-        element: (
-          <PrivateRoutes>
-            <MembershipDashboard></MembershipDashboard>
-          </PrivateRoutes>
-        ),
-      },
+      // {
+      //   path: "membership-dashboard",
+      //   element: (
+      //     <PrivateRoutes>
+      //       <MembershipDashboard></MembershipDashboard>
+      //     </PrivateRoutes>
+      //   ),
+      // },
     ],
   },
   {
@@ -112,6 +113,10 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <MyProfile />,
+      },
+      {
+        path: "payment-membership",
+        element:<MembershipDashboard></MembershipDashboard>,
       },
       {
         path: "add-post",
