@@ -104,12 +104,12 @@ const Register = () => {
           {errors.password?.type === 'required' && <p className="text-red-500">Password is required</p>}
           {errors.password?.type === 'minLength' && <p className="text-red-500">Minimum 6 characters</p>}
 
-          <button className="btn btn-primary mt-4 w-full" disabled={uploading}>
+          <button className="btn bg-[#4CA3B8] text-white mt-4 w-full" disabled={uploading}>
             {uploading ? 'Registering...' : 'Register'}
           </button>
 
           <p className="mt-2">
-            Already have an account? <Link className="btn btn-link" to="/join-us?type=login" state={{ from }}>Login</Link>
+            Already have an account? <Link className="btn btn-link text-[#4CA3B8]" to="/join-us?type=login" state={{ from }}>Login</Link>
           </p>
         </form>
 

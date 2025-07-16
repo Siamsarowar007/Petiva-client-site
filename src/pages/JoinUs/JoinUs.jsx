@@ -51,7 +51,7 @@ const JoinUs = () => {
             onClick={switchToLogin}
             className={`transition-all duration-300 px-5 py-2 font-semibold rounded-md shadow-sm ${
               isLogin
-                ? "bg-orange-500 text-white scale-105"
+                ? "bg-[#4CA3B8] text-white scale-105"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
@@ -61,7 +61,7 @@ const JoinUs = () => {
             onClick={switchToRegister}
             className={`transition-all duration-300 px-5 py-2 font-semibold rounded-md shadow-sm ${
               !isLogin
-                ? "bg-green-500 text-white scale-105"
+                ? "bg-[#4CA3B8] text-white scale-105"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >

@@ -29,7 +29,10 @@ const DashboardLayout = () => {
       >
         <div className="flex justify-between">
           <NavLink to="/">
-            <h2 className="text-xl font-bold mt-12 mb-4">Petiva</h2>
+            <div className=" items-center cursor-pointer">
+              <img src="/Petiva-logo.png" alt="Petiva Logo" className="w-16 h-16 object-contain" />
+              <h4 className="text-[#4CA3B8] text-2xl font-bold m-0">Petiva</h4>
+            </div>
           </NavLink>
           {/* <ThemeToggle /> */}
         </div>
@@ -91,15 +94,6 @@ const DashboardLayout = () => {
               Make Announcement
             </NavLink>
           </li>
-
-          {/* <li>
-            <NavLink
-              to="/dashboard/comment-manage"
-              className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
-            >
-              Comment Manage
-            </NavLink>
-          </li> */}
           <li>
             <NavLink
               to="/dashboard/admin-report"
