@@ -13,7 +13,7 @@ const HomeLayout = () => {
             <Banner></Banner>
             <TagsSection></TagsSection>
             <AnnouncementSection></AnnouncementSection>
-
+        
         </div>
     );
 };

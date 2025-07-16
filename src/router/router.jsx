@@ -22,6 +22,8 @@ import CommentReportPage from "../pages/AllPost/CommentReportPage";
 import PaymentPage from "../pages/Membership/PaymentPage";
 import MembershipPage from "../pages/Membership/MembershipPage"
 import MembershipDashboard from "../pages/Membership/MembershipDashboard";
+import Support from "../pages/Support/Support";
+import AboutUs from "../pages/AboutUs/AboutUs";
 
 
 export const router = createBrowserRouter([
@@ -50,6 +52,14 @@ export const router = createBrowserRouter([
         element: <EditPost />,
       },
       {
+        path: "about",
+        element: <AboutUs/>,
+      },
+      {
+        path: "support",
+        element: <Support/>,
+      },
+      {
         path: "join-us",
         element: <JoinUs />,
       },
@@ -69,14 +79,6 @@ export const router = createBrowserRouter([
           </PrivateRoutes>
         ),
       },
-      // {
-      //   path: "membership-dashboard",
-      //   element: (
-      //     <PrivateRoutes>
-      //       <MembershipDashboard></MembershipDashboard>
-      //     </PrivateRoutes>
-      //   ),
-      // },
     ],
   },
   {

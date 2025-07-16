@@ -295,6 +295,26 @@ const Navbar = () => {
           Membership
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            `font-medium ${isActive ? "border-b-2 border-[#4CA3B8]" : ""}`
+          }
+        >
+          About Us
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/support"
+          className={({ isActive }) =>
+            `font-medium ${isActive ? "border-b-2 border-[#4CA3B8]" : ""}`
+          }
+        >
+          Support
+        </NavLink>
+      </li>
     </>
   );
 
