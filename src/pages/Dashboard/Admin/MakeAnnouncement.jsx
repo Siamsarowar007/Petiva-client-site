@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { FaImage } from "react-icons/fa";
-
 import useAxios from "../../../hooks/useAxios";
 import useAuth from "../../../hooks/useAuth";
 

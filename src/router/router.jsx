@@ -24,6 +24,7 @@ import MembershipPage from "../pages/Membership/MembershipPage"
 import MembershipDashboard from "../pages/Membership/MembershipDashboard";
 import Support from "../pages/Support/Support";
 import AboutUs from "../pages/AboutUs/AboutUs";
+import AdminDashboard from "../pages/Dashboard/Admin/AdminDashboard";
 
 
 export const router = createBrowserRouter([
@@ -133,6 +134,10 @@ export const router = createBrowserRouter([
         element: <MyPost />,
       },
 
+      {
+        path: "admin-dashboard",
+        element: <AdminDashboard/>,
+      },
       {
         path: "admin-profile",
         element: <AdminProfile />,

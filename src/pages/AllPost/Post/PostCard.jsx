@@ -50,7 +50,7 @@ const PostCard = ({ post, fixedHeight = false }) => {
         fixedHeight ? "h-[300px]" : ""
       }`}
     >
-      {/* টপ সেকশন */}
+    
       <div className="flex items-start gap-4">
         <img
           className="h-12 w-12 rounded-full object-cover ring-2 ring-[#4CA3B8]"
@@ -62,7 +62,7 @@ const PostCard = ({ post, fixedHeight = false }) => {
             {post.title}
           </h2>
           <p className="text-xs text-[#4CA3B8] mt-1">#{post.tag}</p>
-          {/* 👇 নতুন লাইন: কে পোস্ট করেছে */}
+        
           <p className="text-xs text-gray-500 mt-1">
             by <span className="font-medium text-gray-700">{authorName}</span>
           </p>
