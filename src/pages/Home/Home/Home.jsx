@@ -64,7 +64,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import PostCard from "./PostCard";
+import PostCard from "../../AllPost/PostCard";
 import { FaSearch } from "react-icons/fa";
 import Loader from "../../../shared/Loader/Loader";
 

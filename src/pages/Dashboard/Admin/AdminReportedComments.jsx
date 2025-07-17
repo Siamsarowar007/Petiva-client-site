@@ -5,8 +5,13 @@
 // const AdminReportedComments = () => {
 //   const axiosSecure = useAxiosSecure();
 //   const [reports, setReports] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const reportsPerPage = 10;
 
-//   // রিপোর্টগুলো ফেচ করার ফাংশন
+//   useEffect(() => {
+//     fetchReports();
+//   }, []);
+
 //   const fetchReports = async () => {
 //     try {
 //       const res = await axiosSecure.get("/reports");
@@ -17,11 +22,6 @@
 //     }
 //   };
 
-//   useEffect(() => {
-//     fetchReports();
-//   }, []);
-
-//   // কমেন্ট ডিলিট করার ফাংশন
 //   const handleDeleteComment = async (commentId) => {
 //     try {
 //       await axiosSecure.delete(`/comments/${commentId}`);
@@ -33,7 +33,6 @@
 //     }
 //   };
 
-//   // ইউজার ব্যান করার ফাংশন (ইমেইল দিয়ে)
 //   const handleBanUser = async (email) => {
 //     try {
 //       await axiosSecure.patch(`/users/ban-by-email/${email}`);
@@ -45,7 +44,6 @@
 //     }
 //   };
 
-//   // রিপোর্ট ইগনোর (ডিলিট) করার ফাংশন
 //   const handleIgnoreReport = async (reportId) => {
 //     try {
 //       await axiosSecure.delete(`/reports/${reportId}`);
@@ -57,6 +55,13 @@
 //     }
 //   };
 
+//   const indexOfLastReport = currentPage * reportsPerPage;
+//   const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+//   const currentReports = reports.slice(indexOfFirstReport, indexOfLastReport);
+//   const totalPages = Math.ceil(reports.length / reportsPerPage);
+
+//   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
 //   return (
 //     <div className="max-w-6xl mx-auto mt-20 px-4">
 //       <h2 className="text-2xl font-bold mb-4">Reported Comments</h2>
@@ -64,47 +69,93 @@
 //       {reports.length === 0 ? (
 //         <p>No reports found.</p>
 //       ) : (
-//         <table className="table w-full border">
-//           <thead>
-//             <tr className="bg-gray-100">
-//               <th className="border px-4 py-2">Comment</th>
-//               <th className="border px-4 py-2">Commenter Email</th>
-//               <th className="border px-4 py-2">Reporter Email</th>
-//               <th className="border px-4 py-2">Reason</th>
-//               <th className="border px-4 py-2">Actions</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {reports.map((report) => (
-//               <tr key={report._id}>
-//                 <td className="border px-4 py-2">{report.commentText}</td>
-//                 <td className="border px-4 py-2">{report.commenterEmail}</td>
-//                 <td className="border px-4 py-2">{report.reporterEmail}</td>
-//                 <td className="border px-4 py-2">{report.reason}</td>
-//                 <td className="border px-4 py-2 flex flex-col gap-1">
-//                   <button
-//                     className="btn btn-xs btn-error"
-//                     onClick={() => handleDeleteComment(report.commentId)}
-//                   >
-//                     Delete Comment
-//                   </button>
-//                   <button
-//                     className="btn btn-xs btn-warning"
-//                     onClick={() => handleBanUser(report.commenterEmail)}
-//                   >
-//                     Ban User
-//                   </button>
-//                   <button
-//                     className="btn btn-xs btn-secondary"
-//                     onClick={() => handleIgnoreReport(report._id)}
-//                   >
-//                     Ignore Report
-//                   </button>
-//                 </td>
+//         <>
+//           <table className="table w-full border">
+//             <thead>
+//               <tr className="bg-gray-100">
+//                 <th className="border px-4 py-2">#</th>
+//                 <th className="border px-4 py-2">Comment</th>
+//                 <th className="border px-4 py-2">Commenter Email</th>
+//                 <th className="border px-4 py-2">Reporter Email</th>
+//                 <th className="border px-4 py-2">Reason</th>
+//                 <th className="border px-4 py-2">Actions</th>
 //               </tr>
-//             ))}
-//           </tbody>
-//         </table>
+//             </thead>
+//             <tbody>
+//               {currentReports.map((report, index) => (
+//                 <tr key={report._id}>
+//                   <td className="border px-4 py-2 text-center">
+//                     {(currentPage - 1) * reportsPerPage + index + 1}
+//                   </td>
+//                   <td className="border px-4 py-2">{report.commentText}</td>
+//                   <td className="border px-4 py-2">{report.commenterEmail}</td>
+//                   <td className="border px-4 py-2">{report.reporterEmail}</td>
+//                   <td className="border px-4 py-2">{report.reason}</td>
+//                   <td className="border px-4 py-2">
+//                     <div className="flex flex-wrap gap-1">
+//                       <button
+//                         className="btn btn-xs btn-error"
+//                         onClick={() => handleDeleteComment(report.commentId)}
+//                       >
+//                         Delete
+//                       </button>
+//                       <button
+//                         className="btn btn-xs btn-warning"
+//                         onClick={() => handleBanUser(report.commenterEmail)}
+//                       >
+//                         Ban
+//                       </button>
+//                       <button
+//                         className="btn btn-xs btn-secondary"
+//                         onClick={() => handleIgnoreReport(report._id)}
+//                       >
+//                         Ignore
+//                       </button>
+//                     </div>
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+
+//           {/* Pagination */}
+//           {reports.length > reportsPerPage && (
+//             <div className="flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto px-4 py-10 gap-3">
+//               <p className="text-sm text-gray-500 text-center sm:text-left">
+//                 Showing {currentReports.length} of {reports.length} reports
+//               </p>
+//               <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+//                 <button
+//                   disabled={currentPage === 1}
+//                   onClick={() => paginate(currentPage - 1)}
+//                   className="text-sm px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+//                 >
+//                   « Previous
+//                 </button>
+//                 {[...Array(totalPages).keys()].map((num) => (
+//                   <button
+//                     key={num}
+//                     onClick={() => paginate(num + 1)}
+//                     className={`px-3 py-2 rounded text-sm border ${
+//                       currentPage === num + 1
+//                         ? "bg-blue-500 text-white"
+//                         : "bg-white text-gray-700 hover:bg-gray-100"
+//                     }`}
+//                   >
+//                     {num + 1}
+//                   </button>
+//                 ))}
+//                 <button
+//                   disabled={currentPage === totalPages}
+//                   onClick={() => paginate(currentPage + 1)}
+//                   className="text-sm px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+//                 >
+//                   Next »
+//                 </button>
+//               </div>
+//             </div>
+//           )}
+//         </>
 //       )}
 //     </div>
 //   );
@@ -113,10 +164,13 @@
 // export default AdminReportedComments;
 
 
-
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+
+const PRIMARY = "#4CA3B8";
+const TABLE_HEAD_BG = "#F0FAFC";
+const TABLE_BORDER = "#E2E8F0";
 
 const AdminReportedComments = () => {
   const axiosSecure = useAxiosSecure();
@@ -171,6 +225,7 @@ const AdminReportedComments = () => {
     }
   };
 
+  // pagination calc
   const indexOfLastReport = currentPage * reportsPerPage;
   const indexOfFirstReport = indexOfLastReport - reportsPerPage;
   const currentReports = reports.slice(indexOfFirstReport, indexOfLastReport);
@@ -178,61 +233,118 @@ const AdminReportedComments = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // small util: truncate for table cell
+  const truncate = (txt = "", len = 40) =>
+    txt.length > len ? txt.slice(0, len) + "…" : txt;
+
   return (
     <div className="max-w-6xl mx-auto mt-20 px-4">
-      <h2 className="text-2xl font-bold mb-4">Reported Comments</h2>
+      <h2 className="text-3xl font-bold mb-6" style={{ color: PRIMARY }}>
+        Reported Comments
+      </h2>
 
       {reports.length === 0 ? (
-        <p>No reports found.</p>
+        <p className="text-gray-500">No reports found.</p>
       ) : (
         <>
-          <table className="table w-full border">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border px-4 py-2">#</th>
-                <th className="border px-4 py-2">Comment</th>
-                <th className="border px-4 py-2">Commenter Email</th>
-                <th className="border px-4 py-2">Reporter Email</th>
-                <th className="border px-4 py-2">Reason</th>
-                <th className="border px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentReports.map((report, index) => (
-                <tr key={report._id}>
-                  <td className="border px-4 py-2 text-center">
-                    {(currentPage - 1) * reportsPerPage + index + 1}
-                  </td>
-                  <td className="border px-4 py-2">{report.commentText}</td>
-                  <td className="border px-4 py-2">{report.commenterEmail}</td>
-                  <td className="border px-4 py-2">{report.reporterEmail}</td>
-                  <td className="border px-4 py-2">{report.reason}</td>
-                  <td className="border px-4 py-2">
-                    <div className="flex flex-wrap gap-1">
-                      <button
-                        className="btn btn-xs btn-error"
-                        onClick={() => handleDeleteComment(report.commentId)}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="btn btn-xs btn-warning"
-                        onClick={() => handleBanUser(report.commenterEmail)}
-                      >
-                        Ban
-                      </button>
-                      <button
-                        className="btn btn-xs btn-secondary"
-                        onClick={() => handleIgnoreReport(report._id)}
-                      >
-                        Ignore
-                      </button>
-                    </div>
-                  </td>
+          <div className="overflow-x-auto">
+            <table
+              className="table w-full border text-sm"
+              style={{ borderColor: TABLE_BORDER }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: TABLE_HEAD_BG }}>
+                  <th className="border px-4 py-2 text-center" style={{ borderColor: TABLE_BORDER }}>
+                    #
+                  </th>
+                  <th className="border px-4 py-2 text-left" style={{ borderColor: TABLE_BORDER }}>
+                    Comment
+                  </th>
+                  <th className="border px-4 py-2 text-left" style={{ borderColor: TABLE_BORDER }}>
+                    Commenter Email
+                  </th>
+                  <th className="border px-4 py-2 text-left" style={{ borderColor: TABLE_BORDER }}>
+                    Reporter Email
+                  </th>
+                  <th className="border px-4 py-2 text-left" style={{ borderColor: TABLE_BORDER }}>
+                    Reason
+                  </th>
+                  <th className="border px-4 py-2 text-center" style={{ borderColor: TABLE_BORDER }}>
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentReports.map((report, index) => (
+                  <tr
+                    key={report._id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td
+                      className="border px-4 py-2 text-center font-medium"
+                      style={{ borderColor: TABLE_BORDER }}
+                    >
+                      {(currentPage - 1) * reportsPerPage + index + 1}
+                    </td>
+                    <td
+                      className="border px-4 py-2 max-w-[220px]"
+                      style={{ borderColor: TABLE_BORDER }}
+                      title={report.commentText}
+                    >
+                      {truncate(report.commentText, 60)}
+                    </td>
+                    <td
+                      className="border px-4 py-2 break-all"
+                      style={{ borderColor: TABLE_BORDER }}
+                      title={report.commenterEmail}
+                    >
+                      {report.commenterEmail}
+                    </td>
+                    <td
+                      className="border px-4 py-2 break-all"
+                      style={{ borderColor: TABLE_BORDER }}
+                      title={report.reporterEmail}
+                    >
+                      {report.reporterEmail}
+                    </td>
+                    <td
+                      className="border px-4 py-2 max-w-[200px]"
+                      style={{ borderColor: TABLE_BORDER }}
+                      title={report.reason}
+                    >
+                      {truncate(report.reason, 40)}
+                    </td>
+                    <td
+                      className="border px-4 py-2"
+                      style={{ borderColor: TABLE_BORDER }}
+                    >
+                      <div className="flex flex-wrap gap-1 justify-center">
+                        <button
+                          className="px-2 py-1 text-xs rounded font-semibold text-white bg-red-500 hover:bg-red-600 transition"
+                          onClick={() => handleDeleteComment(report.commentId)}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          className="px-2 py-1 text-xs rounded font-semibold text-white bg-yellow-500 hover:bg-yellow-600 transition"
+                          onClick={() => handleBanUser(report.commenterEmail)}
+                        >
+                          Ban
+                        </button>
+                        <button
+                          className="px-2 py-1 text-xs rounded font-semibold text-white"
+                          style={{ backgroundColor: PRIMARY }}
+                          onClick={() => handleIgnoreReport(report._id)}
+                        >
+                          Ignore
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {/* Pagination */}
           {reports.length > reportsPerPage && (
@@ -244,7 +356,8 @@ const AdminReportedComments = () => {
                 <button
                   disabled={currentPage === 1}
                   onClick={() => paginate(currentPage - 1)}
-                  className="text-sm px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+                  className="text-sm px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ borderColor: PRIMARY }}
                 >
                   « Previous
                 </button>
@@ -254,9 +367,14 @@ const AdminReportedComments = () => {
                     onClick={() => paginate(num + 1)}
                     className={`px-3 py-2 rounded text-sm border ${
                       currentPage === num + 1
-                        ? "bg-blue-500 text-white"
+                        ? "text-white"
                         : "bg-white text-gray-700 hover:bg-gray-100"
                     }`}
+                    style={{
+                      borderColor: PRIMARY,
+                      backgroundColor:
+                        currentPage === num + 1 ? PRIMARY : undefined,
+                    }}
                   >
                     {num + 1}
                   </button>
@@ -264,7 +382,8 @@ const AdminReportedComments = () => {
                 <button
                   disabled={currentPage === totalPages}
                   onClick={() => paginate(currentPage + 1)}
-                  className="text-sm px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+                  className="text-sm px-4 py-2 rounded border bg-white text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ borderColor: PRIMARY }}
                 >
                   Next »
                 </button>

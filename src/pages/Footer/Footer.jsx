@@ -103,6 +103,7 @@ import {
     FaEnvelope,
     FaMapMarkerAlt,
 } from "react-icons/fa";
+import { NavLink } from "react-router";
 
 const Footer = () => {
     return (
@@ -111,7 +112,14 @@ const Footer = () => {
 
                 {/* Logo & About */}
                 <div>
-                    <h2 className="text-2xl font-bold text-[#4CA3B8] mb-3">Petiva</h2>
+                    <div>
+                        <NavLink to="/">
+                            <div className="flex items-center gap-2 cursor-pointer">
+                                <img src="/Petiva-logo.png" alt="Petiva Logo" className="w-16 h-16 -ml-4 object-contain" />
+                                <h4 className="text-[#4CA3B8] text-3xl font-bold -ml-4">Petiva</h4>
+                            </div>
+                        </NavLink>
+                    </div>
                     <p className="text-sm font-bold leading-6">
                         Empowering pet lovers and caretakers to connect, share, and learn together. Join our community of animal enthusiasts.
                     </p>
@@ -217,7 +225,7 @@ const Footer = () => {
                             <FaEnvelope /> support@petiva.com
                         </li>
                         <li className="flex items-center gap-2 hover:text-[#4CA3B8] font-bold transition-all duration-300">
-                            <FaMapMarkerAlt /> Mymenshingh, Bangladesh 
+                            <FaMapMarkerAlt /> Mymenshingh, Bangladesh
                         </li>
                     </ul>
                     <div className="mt-6">
