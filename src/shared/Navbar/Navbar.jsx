@@ -228,7 +228,7 @@
 
 
 import { useEffect, useState, useContext } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaBell, FaHome, FaInfoCircle, FaQuestionCircle, FaUserCircle, FaTachometerAlt } from "react-icons/fa";
 import { AiOutlineLogout } from "react-icons/ai";
 import { MdOutlinePostAdd, MdWorkspacePremium } from "react-icons/md";
@@ -332,7 +332,7 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100 shadow-sm px-4 sticky top-0 z-50">
       {/* 🔶 Logo & Name */}
-      <div className="navbar-start">
+      <div className="navbar-start lg:ml-76">
         <div className="dropdown -ml-4 lg:hidden">
           <label tabIndex={0} className="btn btn-ghost">
             <svg
@@ -413,6 +413,7 @@ const Navbar = () => {
         )}
 
         {/* 👤 Profile / Join */}
+        <div className="lg:mr-76">
         {!user ? (
           <NavLink
             to="/join-us"
@@ -435,9 +436,11 @@ const Navbar = () => {
               tabIndex={0}
               className="mt-3 z-[10] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-56"
             >
-              <li className=" font-semibold flex ml-4 text-lg gap-2">
+              <Link to="/dashboard/profile">
+                   <li className=" font-semibold flex ml-4 text-lg gap-2">
                 <FaUserCircle /> {user.displayName || "User"}
               </li>
+              </Link>
               <li>
                 <NavLink to="/dashboard" className="flex items-center gap-2 hover:text-[#4CA3B8]">
                   <FaTachometerAlt /> Dashboard
@@ -454,6 +457,7 @@ const Navbar = () => {
             </ul>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

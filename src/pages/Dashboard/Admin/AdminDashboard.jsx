@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import useAuth from '../../../hooks/useAuth'; // আপনার useAuth hook এর সঠিক পথ নিশ্চিত করুন
 import useAxios from '../../../hooks/useAxios'; // আপনার useAxios hook এর সঠিক পথ নিশ্চিত করুন
-import { FaUsers, FaClipboardList, FaChartPie, FaChartLine, FaBell, FaSpinner, FaInfoCircle, FaClock } from 'react-icons/fa';
+import { FaUsers, FaChartPie, FaChartLine, FaBell, FaSpinner, FaInfoCircle, FaClipboardList } from 'react-icons/fa';
 import moment from 'moment'; // For date formatting (npm install moment)
 
 // For charts (npm install recharts)
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-    PieChart, Pie, Cell, Sector
+    PieChart, Pie, Cell, Sector, BarChart, Bar
 } from 'recharts';
 import Swal from 'sweetalert2'; // For elegant alerts (npm install sweetalert2)
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF']; // Chart colors
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF00FF', '#00FFFF']; // Chart colors
 
 // Custom active shape for Pie Chart (optional, for better visualization on hover)
 const renderActiveShape = (props) => {
@@ -71,18 +71,19 @@ const AdminDashboard = () => {
         totalPosts: 0,
         pendingReports: 0,
         recentActivities: [],
-        userGrowthData: [], // Placeholder
-        postUploadsMonthly: [], // Placeholder
+        userPieData: [], 
+        reportPieData: [], // For Pending Reports Pie Chart
+        totalPostsLineData: [], // For Total Posts Line Chart
+        userRegistrationsTrend: [], // Demo Data for User Registrations Trend Line Chart
+        monthlyPostUploadsTrend: [], // Demo Data for Monthly Post Uploads Trend Bar Chart
     });
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState(null);
     const [activeUserPieIndex, setActiveUserPieIndex] = useState(0);
-    const [activePostPieIndex, setActivePostPieIndex] = useState(0);
     const [activeReportPieIndex, setActiveReportPieIndex] = useState(0);
 
     // Event handlers for Pie Chart interactivity
     const onUserPieEnter = (_, index) => setActiveUserPieIndex(index);
-    const onPostPieEnter = (_, index) => setActivePostPieIndex(index);
     const onReportPieEnter = (_, index) => setActiveReportPieIndex(index);
 
     useEffect(() => {
@@ -93,7 +94,7 @@ const AdminDashboard = () => {
             setError(null);
 
             try {
-                // Fetch Total Users - /users API থেকে প্রাপ্ত ডেটা দিয়ে count করা হচ্ছে
+                // Fetch Total Users and prepare data for Pie Chart
                 const usersRes = await axiosInstance.get('/users');
                 let totalUsersCount = 0;
                 let adminUsersCount = 0;
@@ -102,16 +103,14 @@ const AdminDashboard = () => {
                 if (usersRes.data) {
                     if (typeof usersRes.data.total === 'number') {
                         totalUsersCount = usersRes.data.total;
-                        // Assume roles for pie chart if total users is available but not breakdown
-                        // This part needs real backend data if you want accurate admin/regular counts
-                        // For now, it's a rough split or placeholder
-                        adminUsersCount = usersRes.data.users ? usersRes.data.users.filter(u => u.role === 'admin').length : 0;
-                        regularUsersCount = usersRes.data.users ? usersRes.data.users.filter(u => u.role === 'user').length : totalUsersCount - adminUsersCount; // simplified
+                        // For pie chart, if actual roles are not returned, try to infer or use placeholders
+                        adminUsersCount = usersRes.data.users ? usersRes.data.users.filter(u => u.role === 'admin').length : Math.floor(totalUsersCount * 0.1); // Demo split
+                        regularUsersCount = totalUsersCount - adminUsersCount;
                     } else if (Array.isArray(usersRes.data.users)) {
                         totalUsersCount = usersRes.data.users.length;
                         adminUsersCount = usersRes.data.users.filter(u => u.role === 'admin').length;
                         regularUsersCount = usersRes.data.users.filter(u => u.role === 'user').length;
-                    } else if (Array.isArray(usersRes.data)) {
+                    } else if (Array.isArray(usersRes.data)) { // If API returns just an array of users
                         totalUsersCount = usersRes.data.length;
                         adminUsersCount = usersRes.data.filter(u => u.role === 'admin').length;
                         regularUsersCount = usersRes.data.filter(u => u.role === 'user').length;
@@ -122,39 +121,41 @@ const AdminDashboard = () => {
                     { name: 'Regular Users', value: regularUsersCount }
                 ].filter(item => item.value > 0); // Only show if count is greater than 0
 
-                // Fetch Total Posts
+
+                // Fetch Total Posts and prepare data for Line Chart
                 let totalPostsCount = 0;
-                let approvedPostsCount = 0; // Assuming posts have a status like 'approved'
-                let pendingPostsCount = 0; // Assuming posts have a status like 'pending'
+                let postsOverTime = []; // To store data for the line chart
                 try {
-                    const postsCountRes = await axiosInstance.get('/posts/count');
-                    totalPostsCount = postsCountRes.data.count || 0;
-                    // If you have status in posts, fetch all posts to count statuses for pie chart
-                    const allPostsResForStatus = await axiosInstance.get('/all-posts');
-                    if (allPostsResForStatus.data) {
-                        approvedPostsCount = allPostsResForStatus.data.filter(p => p.status === 'approved').length;
-                        pendingPostsCount = allPostsResForStatus.data.filter(p => p.status === 'pending').length;
-                        // Fallback if no specific statuses, just use total
-                        if (approvedPostsCount === 0 && pendingPostsCount === 0 && totalPostsCount > 0) {
-                            approvedPostsCount = totalPostsCount; // Assume all are "approved" if no status breakdown
-                        }
-                    }
-                } catch (e) {
-                    console.warn("'/posts/count' or '/all-posts' API for post status failed. Using total only.");
                     const allPostsRes = await axiosInstance.get('/all-posts');
                     totalPostsCount = allPostsRes.data ? allPostsRes.data.length : 0;
-                    approvedPostsCount = totalPostsCount; // Assume all are approved if no status info
+
+                    // Prepare data for Total Posts Line Chart (e.g., cumulative posts over time)
+                    if (allPostsRes.data) {
+                        const sortedPosts = allPostsRes.data.sort((a, b) => new Date(a.postTime) - new Date(b.postTime));
+                        let cumulativeCount = 0;
+                        const dailyPosts = {}; // Group by date
+                        sortedPosts.forEach(post => {
+                            const date = moment(post.postTime).format('MMM D');
+                            dailyPosts[date] = (dailyPosts[date] || 0) + 1;
+                        });
+
+                        // Convert to cumulative data
+                        Object.keys(dailyPosts).sort((a,b) => new Date(a) - new Date(b)).forEach(date => {
+                            cumulativeCount += dailyPosts[date];
+                            postsOverTime.push({ date, 'Total Posts': cumulativeCount });
+                        });
+                    }
+
+                } catch (e) {
+                    console.warn("'/all-posts' API failed for Total Posts Line Chart. Using total count only.");
                 }
-                const postPieData = [
-                    { name: 'Approved Posts', value: approvedPostsCount },
-                    { name: 'Pending Posts', value: pendingPostsCount }
-                ].filter(item => item.value > 0);
 
 
-                // Fetch Pending Reports
+                // Fetch Pending Reports and prepare data for Pie Chart
                 const reportsRes = await axiosInstance.get('/reports');
                 const pendingReportsCount = reportsRes.data ? reportsRes.data.filter(report => report.status === 'Pending').length : 0;
                 const resolvedReportsCount = reportsRes.data ? reportsRes.data.filter(report => report.status === 'Resolved').length : 0;
+                const totalReportsCount = pendingReportsCount + resolvedReportsCount; // Calculate total for display
                 const reportPieData = [
                     { name: 'Pending Reports', value: pendingReportsCount },
                     { name: 'Resolved Reports', value: resolvedReportsCount }
@@ -173,14 +174,44 @@ const AdminDashboard = () => {
                         .slice(0, 5) // Get top 5 recent posts as activities
                     : [];
 
+                // --- Demo Data for Trends ---
+                const demoUserRegistrationsTrend = [
+                    { date: 'Jul 1', registrations: 5 },
+                    { date: 'Jul 2', registrations: 8 },
+                    { date: 'Jul 3', registrations: 12 },
+                    { date: 'Jul 4', registrations: 15 },
+                    { date: 'Jul 5', registrations: 10 },
+                    { date: 'Jul 6', registrations: 20 },
+                    { date: 'Jul 7', registrations: 18 },
+                ];
+
+                const demoMonthlyPostUploadsTrend = [
+                    { month: 'Jan', posts: 30 },
+                    { month: 'Feb', posts: 45 },
+                    { month: 'Mar', posts: 60 },
+                    { month: 'Apr', posts: 55 },
+                    { month: 'May', posts: 70 },
+                    { month: 'Jun', posts: 85 },
+                    { month: 'Jul', posts: 75 },
+                    { month: 'Aug', posts: 90 },
+                    { month: 'Sep', posts: 80 },
+                    { month: 'Oct', posts: 95 },
+                    { month: 'Nov', posts: 100 },
+                    { month: 'Dec', posts: 110 },
+                ];
+                // --- End Demo Data ---
+
+
                 setDashboardData({
                     totalUsers: totalUsersCount,
                     totalPosts: totalPostsCount,
-                    pendingReports: pendingReportsCount,
+                    pendingReports: totalReportsCount, // Display total reports count on card
                     recentActivities: recentActivities,
-                    userGrowthData: userPieData, // Re-using for User Pie Chart data
-                    postUploadsMonthly: postPieData, // Re-using for Post Pie Chart data
-                    reportData: reportPieData // Adding for Report Pie Chart data
+                    userPieData: userPieData,
+                    reportPieData: reportPieData,
+                    totalPostsLineData: postsOverTime, // Assign line chart data
+                    userRegistrationsTrend: demoUserRegistrationsTrend,
+                    monthlyPostUploadsTrend: demoMonthlyPostUploadsTrend,
                 });
 
             } catch (err) {
@@ -231,21 +262,47 @@ const AdminDashboard = () => {
         <div className="container mx-auto p-4 md:p-8 bg-gray-50 min-h-screen">
             <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center border-b pb-4">Admin Dashboard Overview</h2>
 
-            {/* --- Pie Charts Section --- */}
-            <h3 className="text-3xl font-semibold text-gray-700 mb-6 text-center lg:text-left flex items-center gap-2">
-                <FaChartPie className="text-[#4CA3B8]" /> Key Metrics Breakdown
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
+            {/* --- Key Metrics Display --- */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+                    <div>
+                        <h3 className="text-xl font-semibold text-gray-700">Total Users</h3>
+                        <p className="text-4xl font-bold text-[#4CA3B8]">{dashboardData.totalUsers}</p>
+                    </div>
+                    <FaUsers className="text-6xl text-gray-400" />
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+                    <div>
+                        <h3 className="text-xl font-semibold text-gray-700">Total Posts</h3>
+                        <p className="text-4xl font-bold text-green-600">{dashboardData.totalPosts}</p>
+                    </div>
+                    <FaClipboardList className="text-6xl text-gray-400" />
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow-md flex items-center justify-between border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+                    <div>
+                        <h3 className="text-xl font-semibold text-gray-700">Total Reports</h3>
+                        <p className="text-4xl font-bold text-red-600">{dashboardData.pendingReports}</p>
+                    </div>
+                    <FaBell className="text-6xl text-gray-400" />
+                </div>
+            </div>
+
+            {/* --- Charts Section --- */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                 {/* Total Users Pie Chart */}
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200 flex flex-col items-center">
-                    <h4 className="text-xl font-semibold text-gray-800 mb-4">Total Users: {dashboardData.totalUsers}</h4>
-                    {dashboardData.userGrowthData && dashboardData.userGrowthData.length > 0 ? (
+                    <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
+                        <FaChartPie className="text-[#4CA3B8]" /> User Distribution
+                    </h3>
+                    {dashboardData.userPieData && dashboardData.userPieData.length > 0 ? (
                         <ResponsiveContainer width="100%" height={300}>
                             <PieChart>
                                 <Pie
                                     activeIndex={activeUserPieIndex}
                                     activeShape={renderActiveShape}
-                                    data={dashboardData.userGrowthData}
+                                    data={dashboardData.userPieData}
                                     cx="50%"
                                     cy="50%"
                                     innerRadius={60}
@@ -254,66 +311,34 @@ const AdminDashboard = () => {
                                     dataKey="value"
                                     onMouseEnter={onUserPieEnter}
                                 >
-                                    {dashboardData.userGrowthData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    {dashboardData.userPieData.map((entry, index) => (
+                                        <Cell key={`cell-user-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
-                                <Tooltip formatter={(value, name) => [`${value} ${name.includes('Users') ? 'users' : ''}`, name]} />
+                                <Tooltip formatter={(value, name) => [`${value} users`, name]} />
                                 <Legend />
                             </PieChart>
                         </ResponsiveContainer>
                     ) : (
                         <div className="text-center py-8 text-gray-500 w-full h-full flex flex-col justify-center items-center">
-                            <p className="mb-2">No user data available for the chart.</p>
-                            <p className="text-sm">Ensure your `/users` API provides role breakdown.</p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Total Posts Pie Chart */}
-                <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200 flex flex-col items-center">
-                    <h4 className="text-xl font-semibold text-gray-800 mb-4">Total Posts: {dashboardData.totalPosts}</h4>
-                    {dashboardData.postUploadsMonthly && dashboardData.postUploadsMonthly.length > 0 ? (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    activeIndex={activePostPieIndex}
-                                    activeShape={renderActiveShape}
-                                    data={dashboardData.postUploadsMonthly}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    fill="#82ca9d"
-                                    dataKey="value"
-                                    onMouseEnter={onPostPieEnter}
-                                >
-                                    {dashboardData.postUploadsMonthly.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip formatter={(value, name) => [`${value} ${name.includes('Posts') ? 'posts' : ''}`, name]} />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    ) : (
-                        <div className="text-center py-8 text-gray-500 w-full h-full flex flex-col justify-center items-center">
-                            <p className="mb-2">No post data available for the chart.</p>
-                            <p className="text-sm">Ensure your `/all-posts` API provides status breakdown.</p>
+                            <p className="mb-2">No user role data available for the chart.</p>
+                            <p className="text-sm">Ensure your `/users` API provides user role breakdown.</p>
                         </div>
                     )}
                 </div>
 
                 {/* Pending Reports Pie Chart */}
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200 flex flex-col items-center">
-                    <h4 className="text-xl font-semibold text-gray-800 mb-4">Total Reports: {dashboardData.pendingReports + (dashboardData.reportData ? dashboardData.reportData.find(r => r.name === 'Resolved Reports')?.value || 0 : 0)}</h4>
-                    {dashboardData.reportData && dashboardData.reportData.length > 0 ? (
+                    <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
+                        <FaChartPie className="text-red-500" /> Report Status Breakdown
+                    </h3>
+                    {dashboardData.reportPieData && dashboardData.reportPieData.length > 0 ? (
                         <ResponsiveContainer width="100%" height={300}>
                             <PieChart>
                                 <Pie
                                     activeIndex={activeReportPieIndex}
                                     activeShape={renderActiveShape}
-                                    data={dashboardData.reportData}
+                                    data={dashboardData.reportPieData}
                                     cx="50%"
                                     cy="50%"
                                     innerRadius={60}
@@ -322,11 +347,11 @@ const AdminDashboard = () => {
                                     dataKey="value"
                                     onMouseEnter={onReportPieEnter}
                                 >
-                                    {dashboardData.reportData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    {dashboardData.reportPieData.map((entry, index) => (
+                                        <Cell key={`cell-report-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
-                                <Tooltip formatter={(value, name) => [`${value} ${name.includes('Reports') ? 'reports' : ''}`, name]} />
+                                <Tooltip formatter={(value, name) => [`${value} reports`, name]} />
                                 <Legend />
                             </PieChart>
                         </ResponsiveContainer>
@@ -339,98 +364,102 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
+            {/* Total Posts Line Chart */}
+            <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200 mb-10">
+                <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
+                    <FaChartLine className="text-green-600" /> Total Posts Over Time
+                </h3>
+                {dashboardData.totalPostsLineData && dashboardData.totalPostsLineData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart
+                            data={dashboardData.totalPostsLineData}
+                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" />
+                            <YAxis allowDecimals={false} />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="Total Posts" stroke="#82ca9d" activeDot={{ r: 8 }} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                ) : (
+                    <div className="text-center py-12 text-gray-500">
+                        <p className="mb-4">No post data over time to display.</p>
+                        <p className="text-sm">Ensure your `/all-posts` API returns `postTime` for each post.</p>
+                    </div>
+                )}
+            </div>
+
+            {/* --- Trend Graphs --- */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* --- Recent Activity Feed --- */}
+                {/* User Registrations Trend (Demo Data) */}
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
                     <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
-                        <FaInfoCircle className="text-[#4CA3B8]" /> Recent Activities
+                        <FaChartLine className="text-[#4CA3B8]" /> User Registrations Trend (Demo)
                     </h3>
-                    {dashboardData.recentActivities.length > 0 ? (
-                        <ul className="space-y-4">
-                            {dashboardData.recentActivities.map((activity, index) => (
-                                <li key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-md border border-gray-100 shadow-sm">
-                                    <FaClock className="text-[#4CA3B8] text-xl mt-1 flex-shrink-0" />
-                                    <div>
-                                        <p className="font-semibold text-gray-800">{activity.type}: <span className="font-normal">{activity.description}</span></p>
-                                        <p className="text-sm text-gray-500 mt-1">{moment(activity.timestamp).fromNow()} ({moment(activity.timestamp).format('MMM D, h:mm A')})</p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className="text-gray-500 text-center py-8">No recent activities to display.</p>
-                    )}
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart
+                            data={dashboardData.userRegistrationsTrend}
+                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" />
+                            <YAxis allowDecimals={false} />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="registrations" stroke="#4CA3B8" activeDot={{ r: 8 }} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                    <p className="text-center text-gray-500 text-sm mt-4">
+                        *This chart uses demo data. For live data, integrate a backend API that provides daily user registrations.
+                    </p>
                 </div>
 
-                {/* --- User Growth Line Chart (Placeholder for now) --- */}
+                {/* Monthly Post Uploads Trend (Demo Data) */}
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
                     <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
-                        <FaChartLine className="text-[#4CA3B8]" /> User Registrations Trend
+                        <FaClipboardList className="text-[#82ca9d]" /> Monthly Post Uploads Trend (Demo)
                     </h3>
-                    {/* Note: dashboardData.userGrowthData is now used for Pie Chart.
-                       You need a separate backend API for actual time-series user growth data */}
-                    {/* Placeholder for actual line graph data */}
-                    {[] && [].length > 0 ? ( // Placeholder: Replace [] with actual line chart data
-                        <ResponsiveContainer width="100%" height={300}>
-                            <LineChart
-                                data={[]} // Replace with actual user growth data
-                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                            >
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
-                                <YAxis allowDecimals={false} />
-                                <Tooltip />
-                                <Legend />
-                                <Line type="monotone" dataKey="registrations" stroke="#4CA3B8" activeDot={{ r: 8 }} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    ) : (
-                        <div className="text-center py-12 text-gray-500">
-                            <p className="mb-4">This chart shows user registration trends over time.</p>
-                            <p className="text-sm">
-                                To enable this, you need a backend API that aggregates user registrations by date (e.g., last 30 days).
-                            </p>
-                            <div className="h-48 bg-gray-100 rounded-lg flex items-center justify-center mt-6 text-gray-400">
-                                <span className="text-lg">Line Graph Placeholder</span>
-                            </div>
-                        </div>
-                    )}
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                            data={dashboardData.monthlyPostUploadsTrend}
+                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="month" />
+                            <YAxis allowDecimals={false} />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="posts" fill="#82ca9d" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                    <p className="text-center text-gray-500 text-sm mt-4">
+                        *This chart uses demo data. For live data, integrate a backend API that aggregates monthly post uploads.
+                    </p>
                 </div>
+            </div>
 
-                {/* --- Monthly Post Uploads Bar Chart (Placeholder for now) --- */}
-                <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200 lg:col-span-2">
-                    <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
-                        <FaClipboardList className="text-[#4CA3B8]" /> Monthly Post Uploads Trend
-                    </h3>
-                    {/* Note: dashboardData.postUploadsMonthly is now used for Pie Chart.
-                       You need a separate backend API for actual time-series post uploads data */}
-                    {/* Placeholder for actual bar graph data */}
-                    {[] && [].length > 0 ? ( // Placeholder: Replace [] with actual bar chart data
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart
-                                data={[]} // Replace with actual monthly post uploads data
-                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                            >
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="month" />
-                                <YAxis allowDecimals={false} />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="posts" fill="#82ca9d" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    ) : (
-                        <div className="text-center py-12 text-gray-500">
-                            <p className="mb-4">This chart shows the number of posts uploaded monthly.</p>
-                            <p className="text-sm">
-                                To enable this, you need a backend API that aggregates post uploads by month (e.g., last 12 months).
-                            </p>
-                            <div className="h-48 bg-gray-100 rounded-lg flex items-center justify-center mt-6 text-gray-400">
-                                <span className="text-lg">Bar Graph Placeholder</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
+            {/* --- Recent Activity Feed --- */}
+            <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200 mt-8">
+                <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
+                    <FaInfoCircle className="text-[#4CA3B8]" /> Recent Activities
+                </h3>
+                {dashboardData.recentActivities.length > 0 ? (
+                    <ul className="space-y-4">
+                        {dashboardData.recentActivities.map((activity, index) => (
+                            <li key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-md border border-gray-100 shadow-sm">
+                                <FaChartLine className="text-[#4CA3B8] text-xl mt-1 flex-shrink-0" /> {/* Changed icon to FaChartLine, feel free to use FaClock */}
+                                <div>
+                                    <p className="font-semibold text-gray-800">{activity.type}: <span className="font-normal">{activity.description}</span></p>
+                                    <p className="text-sm text-gray-500 mt-1">{moment(activity.timestamp).fromNow()} ({moment(activity.timestamp).format('MMM D, h:mm A')})</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="text-gray-500 text-center py-8">No recent activities to display.</p>
+                )}
             </div>
         </div>
     );
