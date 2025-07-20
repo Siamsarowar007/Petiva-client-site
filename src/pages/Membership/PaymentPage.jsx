@@ -15,6 +15,7 @@ const PaymentPage = () => {
 
   return (
     <div className="max-w-lg mx-auto p-6 mt-10 mb-14 shadow-lg rounded-lg bg-white">
+      <title>Payment Page || Petiva</title>
       <h1 className="text-3xl font-bold mb-4 text-center">Pay for {plan} Plan</h1>
       <p className="text-xl mb-6 text-center">Price: ৳{price}/month</p>
       <Elements stripe={stripePromise}>

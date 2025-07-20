@@ -119,6 +119,7 @@ const DashboardHome = () => {
             className="container mx-auto p-4 md:p-8 min-h-screen bg-gray-50 pt-20"
         >
             <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-100">
+                <title>Dashboard || Petiva</title>
                 {/* Personalized Welcome Message */}
                 <h1 className={`text-3xl md:text-4xl font-bold text-gray-800 mb-6 ${PRIMARY_COLOR_CLASS}`}>
                     Welcome back, <span className='text-[#4CA3B8]'>{user.displayName || user.email.split('@')[0]}!</span>

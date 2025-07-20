@@ -14,6 +14,7 @@ const JoinUs = () => {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gray-50 p-6 gap-10">
+      <title>JoinUs || Petiva</title>
       {/* Left Side: Dynamic Description */}
       <div className="max-w-md text-center lg:text-left space-y-6">
         <h1 className="text-4xl font-extrabold text-gray-800">

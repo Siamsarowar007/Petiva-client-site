@@ -123,7 +123,7 @@ const DashboardLayout = () => {
                     isActive ? activeClass : inactiveClass
                   }
                 >
-                  <FaCrown /> Membership History
+                  <FaCrown /> Payment History
                 </NavLink>
               </li>
               <li>

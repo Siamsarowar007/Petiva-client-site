@@ -37,6 +37,7 @@ const ManageUsers = () => {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
+      <title>Admin Manage Users || Petiva</title>
       <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
 
       <input

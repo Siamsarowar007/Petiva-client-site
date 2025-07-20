@@ -65,6 +65,7 @@ const CommentReportPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 mt-20">
+      <title>Report Comment || Petiva</title>
       <h2 className="text-2xl font-bold mb-4">All Comments on this Post</h2>
       <table className="table-auto w-full border">
         <thead>

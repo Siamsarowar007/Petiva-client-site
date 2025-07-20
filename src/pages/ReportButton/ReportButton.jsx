@@ -20,12 +20,15 @@ const ReportButton = ({ commentId }) => {
   };
 
   return (
-    <button
-      onClick={reportComment}
-      className="text-xs text-red-500 underline ml-2"
-    >
-      Report
-    </button>
+    <div>
+      <title>Report || Petiva</title>
+      <button
+        onClick={reportComment}
+        className="text-xs text-red-500 underline ml-2"
+      >
+        Report
+      </button>
+    </div>
   );
 };
 

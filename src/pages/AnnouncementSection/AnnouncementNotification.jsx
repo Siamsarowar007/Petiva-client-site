@@ -11,7 +11,7 @@ const AnnouncementNotification = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Fetch announcements + unread count for this user
+ 
   const { data, isLoading, refetch } = useQuery(
     ["user-announcements", user?.uid],
     async () => {
@@ -20,7 +20,7 @@ const AnnouncementNotification = () => {
       return res.data;
     },
     {
-      enabled: !!user, // only fetch if user exists
+      enabled: !!user, 
       refetchOnWindowFocus: false,
     }
   );

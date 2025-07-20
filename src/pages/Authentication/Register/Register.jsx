@@ -211,48 +211,49 @@ const Register = () => {
 
   return (
     <div className="card bg-base-100 w-full max-w-sm shadow-2xl">
+      <title>JoinUs Register || Petiva</title>
       <div className="card-body">
         <h1 className="text-3xl font-bold">Create Account</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="label">Your Name</label>
           <input type="text" {...register('name', { required: true })} className="input input-bordered w-full" />
-          {errors.name && <p className="text-red-500 mt-1">Name is required</p>} {/* ✅ Added mt-1 */}
+          {errors.name && <p className="text-red-500 mt-1">Name is required</p>}
 
           <label className="label">Upload Image (optional)</label>
           <input type="file" {...register('image')} className="file-input file-input-bordered w-full" />
 
           <label className="label">Email</label>
           <input type="email" {...register('email', { required: true })} className="input input-bordered w-full" />
-          {errors.email && <p className="text-red-500 mt-1">Email is required</p>} {/* ✅ Added mt-1 */}
+          {errors.email && <p className="text-red-500 mt-1">Email is required</p>} 
 
           <label className="label">Password</label>
-          <div className="relative w-full"> {/* ✅ Added relative wrapper for icon positioning */}
+          <div className="relative w-full"> 
             <input
-              type={showPassword ? "text" : "password"} // ✅ Dynamically change type
+              type={showPassword ? "text" : "password"}
               {...register('password', {
                   required: true,
                   minLength: 6,
-                  // pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/ // Example: for stronger password validation
+                  pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/ 
               })}
-              className="input input-bordered w-full pr-10" // ✅ Added padding-right for the icon
+              className="input input-bordered w-full pr-10" 
               placeholder="Password"
             />
             <span
-              className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500 hover:text-gray-700" // ✅ Icon positioning and styling
-              onClick={() => setShowPassword(prev => !prev)} // ✅ Toggle password visibility
+              className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500 hover:text-gray-700" 
+              onClick={() => setShowPassword(prev => !prev)} 
             >
-              {showPassword ? <FaEyeSlash className="h-5 w-5" /> : <FaEye className="h-5 w-5" />} {/* ✅ Render appropriate icon */}
+              {showPassword ? <FaEyeSlash className="h-5 w-5" /> : <FaEye className="h-5 w-5" />} 
             </span>
           </div>
           {errors.password?.type === 'required' && <p className="text-red-500 mt-1">Password is required</p>}
           {errors.password?.type === 'minLength' && <p className="text-red-500 mt-1">Minimum 6 characters</p>}
-          {/* errors.password?.type === 'pattern' && <p className="text-red-500 mt-1">Password must have at least one uppercase, one lowercase, one number and one special character.</p> */}
-
+          {errors.password?.type === 'pattern' && <p className="text-red-500 mt-1">Password must have at least one uppercase, one lowercase, one number and one special character.</p>
+}
           <button className="btn bg-[#4CA3B8] text-white mt-4 w-full" disabled={uploading}>
             {uploading ? 'Registering...' : 'Register'}
           </button>
 
-          <p className="mt-2 text-center"> {/* ✅ Added text-center */}
+          <p className="mt-2 text-center"> 
             Already have an account? <Link className="btn btn-link text-[#4CA3B8]" to="/join-us?type=login" state={{ from }}>Login</Link>
           </p>
         </form>

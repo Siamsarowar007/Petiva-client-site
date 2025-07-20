@@ -130,6 +130,7 @@ const Login = () => {
 
     return (
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+            <title>JoinUs Login || Petiva</title>
             <div className="card-body">
                 <h1 className="text-5xl font-bold">Please Login</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -139,7 +140,7 @@ const Login = () => {
                         <input
                             type="email"
                             {...register('email')}
-                            className="input input-bordered w-full" // DaisyUI input style
+                            className="input input-bordered w-full" 
                             placeholder="Email"
                         />
 
@@ -151,14 +152,14 @@ const Login = () => {
                                     required: true,
                                     minLength: 6
                                 })}
-                                className="input input-bordered w-full pr-10" // ✅ input-bordered যোগ করা হয়েছে, এবং pr-10 (padding-right) নিশ্চিত করা হয়েছে
+                                className="input input-bordered w-full pr-10" 
                                 placeholder="Password"
                             />
                             <span
-                                className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500 hover:text-gray-700" // ✅ text-gray-500 ও hover:text-gray-700 যোগ করা হয়েছে
+                                className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500 hover:text-gray-700" 
                                 onClick={() => setShowPassword(prev => !prev)}
                             >
-                                {showPassword ? <FaEyeSlash className="h-5 w-5" /> : <FaEye className="h-5 w-5" />} {/* ✅ আইকনের সাইজ নির্ধারণ করা হয়েছে */}
+                                {showPassword ? <FaEyeSlash className="h-5 w-5" /> : <FaEye className="h-5 w-5" />} 
                             </span>
                         </div>
                         {
@@ -168,9 +169,9 @@ const Login = () => {
                             errors.password?.type === 'minLength' && <p className='text-red-500 mt-1'>Password must be at least 6 characters</p>
                         }
 
-                        <div className="label-text-alt link link-hover mt-2">Forgot password?</div> {/* ✅ DaisyUI link style ব্যবহার করা হয়েছে */}
+                        <div className="label-text-alt link link-hover mt-2">Forgot password?</div> 
 
-                        <button className="btn bg-[#4CA3B8] text-white mt-4 w-full">Login</button> {/* ✅ w-full যোগ করা হয়েছে */}
+                        <button className="btn bg-[#4CA3B8] text-white mt-4 w-full">Login</button> 
                     </fieldset>
                     <p className="text-center mt-4">
                         New to this website? <Link className="btn btn-link text-[#4CA3B8]" to="/join-us?type=register">Register</Link>

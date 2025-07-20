@@ -397,6 +397,7 @@ const ManageUsers = () => {
 
   return (
     <div className="p-4">
+      <title>Manage Users || Petiva</title>
       <div className="flex justify-between items-center mb-4 flex-wrap gap-4">
         <h2 className="text-2xl font-bold">Manage Users</h2>
         <input

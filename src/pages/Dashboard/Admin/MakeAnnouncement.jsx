@@ -388,22 +388,21 @@
 
 
 import React, { useState, useMemo, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query"; // Ensure useQueryClient is imported
+import { useQuery, useQueryClient } from "@tanstack/react-query"; 
 import Swal from "sweetalert2";
 import { FaImage, FaPlusCircle, FaTimesCircle, FaTags, FaSpinner } from "react-icons/fa";
-import useAxios from "../../../hooks/useAxios"; // Adjust path if necessary
-import useAuth from "../../../hooks/useAuth"; // Adjust path if necessary
+import useAxios from "../../../hooks/useAxios"; 
+import useAuth from "../../../hooks/useAuth"; 
 
 const PRIMARY = "#4CA3B8";
 const PAGE_SIZE = 10;
 
 const MakeAnnouncement = () => {
-  // Use 'axiosSecure' for authenticated requests if your useAxios hook provides it
-  // Otherwise, 'axios' is fine if it returns the authenticated instance.
-  const axiosSecure = useAxios(); // Renamed for clarity to match common practice
+  
+  const axiosSecure = useAxios();
   const { user } = useAuth();
   const imgbbAPIKey = import.meta.env.VITE_IMGBB_API_KEY;
-  const qc = useQueryClient(); // Get QueryClient instance for cache invalidation
+  const qc = useQueryClient(); 
 
   // --- Announcement Form State & Hooks ---
   const [announcement, setAnnouncement] = useState({
@@ -418,18 +417,18 @@ const MakeAnnouncement = () => {
 
   const {
     data: announcements = [],
-    refetch, // Use refetch for announcements
-    isLoading: announcementsLoading, // Renamed for clarity
-    isError: announcementsError, // Renamed for clarity
+    refetch,
+    isLoading: announcementsLoading, 
+    isError: announcementsError, 
   } = useQuery({
     queryKey: ["announcements"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/announcements"); // Use axiosSecure
+      const res = await axiosSecure.get("/announcements"); 
       return res.data;
     },
   });
 
-  const posts = announcements; // Renamed to 'posts' for consistency with pagination
+  const posts = announcements;
   const totalPages = Math.ceil(posts.length / PAGE_SIZE) || 1;
   const indexOfLast = currentPage * PAGE_SIZE;
   const indexOfFirst = indexOfLast - PAGE_SIZE;
@@ -441,11 +440,11 @@ const MakeAnnouncement = () => {
   };
 
   useEffect(() => {
-    // Adjust current page if announcements are deleted and page becomes empty
+   
     if (currentPage > totalPages && totalPages > 0) {
       setCurrentPage(totalPages);
     } else if (totalPages === 0 && currentPage !== 1) {
-        setCurrentPage(1); // Reset to first page if no announcements
+        setCurrentPage(1); 
     }
   }, [totalPages, currentPage]);
 
@@ -479,7 +478,7 @@ const MakeAnnouncement = () => {
     const formData = new FormData();
     formData.append("image", imageFile);
     try {
-      const uploadRes = await axiosSecure.post( // Use axiosSecure
+      const uploadRes = await axiosSecure.post( 
         `https://api.imgbb.com/1/upload?key=${imgbbAPIKey}`,
         formData
       );
@@ -514,15 +513,15 @@ const MakeAnnouncement = () => {
       };
 
       if (editingId) {
-        await axiosSecure.put(`/announcements/${editingId}`, payload); // Use axiosSecure
+        await axiosSecure.put(`/announcements/${editingId}`, payload);
         Swal.fire("Updated!", "Announcement updated successfully.", "success");
       } else {
-        await axiosSecure.post("/announcements", payload); // Use axiosSecure
+        await axiosSecure.post("/announcements", payload);
         Swal.fire("Success!", "Announcement posted successfully.", "success");
       }
 
       resetForm();
-      refetch(); // Refetch announcements after CUD operation
+      refetch(); 
     } catch (err) {
       console.error("Announcement operation failed:", err);
       Swal.fire("Error", err.response?.data?.message || "Something went wrong with the announcement!", "error");
@@ -536,7 +535,7 @@ const MakeAnnouncement = () => {
       title: item.title,
       description: item.description,
     });
-    setImageFile(null); // Clear image file when editing, user can re-upload
+    setImageFile(null); 
     Swal.fire("Edit Mode", "You're editing the announcement", "info");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -555,9 +554,9 @@ const MakeAnnouncement = () => {
     if (!result.isConfirmed) return;
 
     try {
-      await axiosSecure.delete(`/announcements/${id}`); // Use axiosSecure
+      await axiosSecure.delete(`/announcements/${id}`);
       Swal.fire("Deleted!", "Announcement has been deleted.", "success");
-      refetch(); // Refetch announcements after deletion
+      refetch(); 
     } catch (err) {
       console.error("Announcement deletion failed:", err);
       Swal.fire("Error!", err.response?.data?.message || "Could not delete the announcement.", "error");
@@ -589,20 +588,19 @@ const MakeAnnouncement = () => {
     queryKey: ["tags"],
     queryFn: async () => {
       try {
-        const res = await axiosSecure.get("/tags"); // Use axiosSecure
+        const res = await axiosSecure.get("/tags"); 
         return res.data || [];
       } catch (err) {
         console.error("Failed to load tags:", err);
-        // Do not throw here if you want to display 'Failed to load tags' message
-        // instead of crashing the component. `isError` will be true.
-        throw err; // Re-throw to set `isError` status in useQuery
+        
+        throw err; 
       }
     },
   });
 
-  /* --------------------
-   * Add tag
-   * -------------------- */
+
+  //  * Add tag
+  
   const handleAddTag = async (e) => {
     e.preventDefault();
     const tagName = tagInput.trim();
@@ -612,11 +610,11 @@ const MakeAnnouncement = () => {
     }
 
     try {
-      const res = await axiosSecure.post("/tags", { name: tagName }); // Use axiosSecure
-      if (res.status === 201) { // Backend returns 201 for successful creation
+      const res = await axiosSecure.post("/tags", { name: tagName });
+      if (res.status === 201) {
         Swal.fire("Success", "Tag added successfully!", "success");
         setTagInput("");
-        qc.invalidateQueries({ queryKey: ["tags"] }); // Refresh tags list
+        qc.invalidateQueries({ queryKey: ["tags"] }); 
       }
     } catch (err) {
       console.error("Add tag failed:", err);
@@ -625,9 +623,9 @@ const MakeAnnouncement = () => {
     }
   };
 
-  /* --------------------
-   * Delete tag
-   * -------------------- */
+ 
+  //  * Delete tag
+  
   const handleDeleteTag = async (tag) => {
     const confirm = await Swal.fire({
       title: `Delete tag "${tag.name}"?`,
@@ -643,9 +641,9 @@ const MakeAnnouncement = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      await axiosSecure.delete(`/tags/${tag._id}`); // Use axiosSecure, send _id
+      await axiosSecure.delete(`/tags/${tag._id}`); 
       Swal.fire("Deleted!", "Tag has been removed.", "success");
-      qc.invalidateQueries({ queryKey: ["tags"] }); // Refresh tags list
+      qc.invalidateQueries({ queryKey: ["tags"] }); 
     } catch (err) {
       console.error("Delete tag failed:", err);
       const errorMessage = err.response?.data?.message || "Could not delete tag. Please try again.";
@@ -656,6 +654,7 @@ const MakeAnnouncement = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
+      <title>Admin Announcement || Petiva</title>
       <h2
         className={`text-3xl font-bold text-center mb-6 ${
           editingId ? "text-yellow-600" : "text-gray-800"
@@ -770,13 +769,13 @@ const MakeAnnouncement = () => {
               onChange={(e) => setTagInput(e.target.value)}
               className="input input-bordered w-full h-9 text-sm"
               placeholder="e.g., Technology, Sports, News"
-              required // Added required attribute
+              required 
             />
           </div>
           <button
             type="submit"
             className="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition-colors duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
-            disabled={tagsLoading || !tagInput.trim()} // Disable if loading or input is empty
+            disabled={tagsLoading || !tagInput.trim()} 
           >
             {tagsLoading ? <FaSpinner className="animate-spin" /> : <FaPlusCircle />} Add Tag
           </button>
@@ -794,10 +793,10 @@ const MakeAnnouncement = () => {
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <div
-                key={tag._id} // Use _id from backend
+                key={tag._id} 
                 className="inline-flex items-center bg-[#4CA3B8] text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-sm hover:shadow-md transition-shadow duration-200 group"
               >
-                <span className="mr-2">{tag.name}</span> {/* Use name from backend */}
+                <span className="mr-2">{tag.name}</span> 
                 <button
                   onClick={() => handleDeleteTag(tag)}
                   className="text-white text-base hover:text-red-300 transition-colors duration-200"
@@ -816,9 +815,9 @@ const MakeAnnouncement = () => {
       {/* Announcements Table */}
       <div className="mt-12">
         <h3 className="text-2xl font-semibold mb-4">All Announcements</h3>
-        {announcementsLoading ? ( // Use specific loading state
+        {announcementsLoading ? ( 
           <p>Loading announcements...</p>
-        ) : announcementsError ? ( // Use specific error state
+        ) : announcementsError ? ( 
           <p className="text-red-500">Failed to load announcements.</p>
         ) : posts.length === 0 ? (
           <p className="text-gray-500">No announcements yet.</p>

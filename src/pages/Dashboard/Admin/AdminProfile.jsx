@@ -735,6 +735,7 @@ const AdminProfile = () => {
 
     return (
         <div className="container mx-auto p-4 md:p-8">
+            <title>Admin Profile || Petiva</title>
             <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center">Admin Profile</h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

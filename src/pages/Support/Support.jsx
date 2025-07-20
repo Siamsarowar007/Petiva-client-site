@@ -154,7 +154,7 @@ const Support = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 text-gray-800">
-
+      <title>Support || Petiva</title>
       {/* 🆕 Support & Help Center Section */}
       <motion.div
         className="text-center mb-12"

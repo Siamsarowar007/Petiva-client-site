@@ -25,6 +25,7 @@ import MembershipDashboard from "../pages/Membership/MembershipDashboard";
 import Support from "../pages/Support/Support";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import AdminDashboard from "../pages/Dashboard/Admin/AdminDashboard";
+import Test from "./Test/Test";
 
 
 export const router = createBrowserRouter([
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: "all-post",
         element: <AllPost />,
+      },
+      {
+        path: "test",
+        element: <Test/>,
       },
       {
         path: "post-details/:id",

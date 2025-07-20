@@ -1338,7 +1338,7 @@ import useAxios from '../../../hooks/useAxios';
 import Loader from '../../../shared/Loader/Loader';
 import Swal from 'sweetalert2';
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-import { getAuth } from 'firebase/auth'; // Import getAuth to access the current auth instance
+import { getAuth } from 'firebase/auth'; 
 
 // ImgBB API Key from .env
 const imgbbAPIKey = import.meta.env.VITE_IMGBB_API_KEY;
@@ -1362,23 +1362,21 @@ const MyProfile = () => {
     const [aboutMe, setAboutMe] = useState('');
     const [location, setLocation] = useState('');
     const [fullName, setFullName] = useState('');
-    const [profileImageFile, setProfileImageFile] = useState(null); // New state for selected image file
-    const [currentProfileImageUrl, setCurrentProfileImageUrl] = useState(''); // State to hold the current image URL for display
+    const [profileImageFile, setProfileImageFile] = useState(null); 
+    const [currentProfileImageUrl, setCurrentProfileImageUrl] = useState(''); 
 
-    // New states for password change
+    
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
-    // States for toggling password visibility
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    // Base URL for your backend API
     const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
+        console.log({loading})
     const fetchUserData = useCallback(async () => {
         if (!user?.email) {
             setLoading(false);
@@ -1407,12 +1405,12 @@ const MyProfile = () => {
                 reputation: dbUserData.reputation || 0,
             }));
 
-            // Set states for editable fields
+         
             setAboutMe(dbUserData.aboutMe || '');
             setLocation(dbUserData.location || '');
             setFullName(dbUserData.fullName || user.displayName || '');
             setCurrentProfileImageUrl(user.photoURL || 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=User');
-
+            setLoading(false)
 
         } catch (error) {
             console.error("Failed to fetch user profile data:", error);
@@ -1434,15 +1432,15 @@ const MyProfile = () => {
     }, [user, authLoading, fetchUserData]);
 
 
-    // Function to handle profile update
+ 
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
-        let imageUrlToUpdate = currentProfileImageUrl; // Start with current image URL
+        let imageUrlToUpdate = currentProfileImageUrl; 
 
         try {
             if (profileImageFile) {
-                // Upload image to ImgBB
+               
                 const imageFile = { image: profileImageFile };
                 const imgbbResponse = await privateAxios.post(
                     `https://api.imgbb.com/1/upload?key=${imgbbAPIKey}`,
@@ -1456,13 +1454,12 @@ const MyProfile = () => {
                 imageUrlToUpdate = imgbbResponse.data.data.display_url;
             }
 
-            // Update display name and photoURL in Firebase Auth
             await updateUserProfile({
                 displayName: fullName,
                 photoURL: imageUrlToUpdate,
             });
 
-            // Update user data in your backend DB
+          
             await privateAxios.patch(`${API_BASE}/users/${user.email}`, {
                 aboutMe,
                 location,
@@ -1478,8 +1475,9 @@ const MyProfile = () => {
                 showConfirmButton: false
             });
             setEditMode(false);
-            setProfileImageFile(null); // Clear selected file after successful upload/update
-            fetchUserData(); // Re-fetch data to reflect changes
+            setProfileImageFile(null); 
+            setLoading(false)
+            fetchUserData(); 
             setShowPasswordChange(false);
 
         } catch (error) {
@@ -1494,10 +1492,10 @@ const MyProfile = () => {
         }
     };
 
-    // Function to handle password change
+
     const handlePasswordChange = async (e) => {
         e.preventDefault();
-        setPasswordError(''); // Clear previous errors
+        setPasswordError('');
 
         if (!oldPassword) {
             setPasswordError('Please enter your old password.');
@@ -1516,14 +1514,15 @@ const MyProfile = () => {
 
         setLoading(true);
         try {
-            // Re-authenticate user with old password before changing
+     
             const auth = getAuth();
             const credential = EmailAuthProvider.credential(user.email, oldPassword);
-
+            console.log(auth)
             await reauthenticateWithCredential(user, credential);
 
-            // Use the Firebase updatePassword function
-            await updatePassword(user, newPassword);
+       
+            await updatePassword(user, newPassword)
+            .then(res=>setLoading(false))
 
             Swal.fire({
                 icon: 'success',
@@ -1584,6 +1583,7 @@ const MyProfile = () => {
             className="container mx-auto p-4 md:p-8 min-h-screen bg-gray-50 pt-20"
         >
             <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-100">
+                <title>My Profile || Petiva</title>
                 {/* Profile Header */}
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-gray-200">
                     <div className="relative">
@@ -1612,12 +1612,12 @@ const MyProfile = () => {
                             setEditMode(!editMode);
                             setShowPasswordChange(false);
                             if (editMode) {
-                                // Reset editable fields if cancelling edit
+                             
                                 setAboutMe(profileData?.aboutMe || '');
                                 setLocation(profileData?.location || '');
                                 setFullName(profileData?.fullName || user.displayName || '');
-                                setProfileImageFile(null); // Clear selected file
-                                setCurrentProfileImageUrl(user.photoURL || 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=User'); // Reset current image URL
+                                setProfileImageFile(null); 
+                                setCurrentProfileImageUrl(user.photoURL || 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=User'); 
                             }
                         }}
                         className={`text-sm px-4 py-2 rounded-lg flex items-center gap-2 ${PRIMARY_BG_COLOR_CLASS} text-white ${PRIMARY_HOVER_BG_COLOR_CLASS} transition-colors mt-4 sm:mt-0`}

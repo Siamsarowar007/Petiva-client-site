@@ -183,11 +183,13 @@ const MyPost = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
+      <title>My Post || Petiva</title>
       <h2 className="text-3xl font-bold mb-8 text-center" style={{ color: PRIMARY }}>
         My Posts
       </h2>
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg border border-gray-200">
+        
         <table className="min-w-full table-auto text-sm">
           <thead>
             <tr

@@ -66,6 +66,7 @@ const EditPost = () => {
 
   return (
     <div className="max-w-xl mx-auto p-4">
+      <title>Edit Post || Petiva</title>
       <h2 className="text-2xl font-semibold mb-4 text-center">Edit Post</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">

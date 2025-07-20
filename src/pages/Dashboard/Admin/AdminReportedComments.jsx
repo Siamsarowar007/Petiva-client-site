@@ -239,6 +239,7 @@ const AdminReportedComments = () => {
 
   return (
     <div className="max-w-6xl mx-auto mt-20 px-4">
+      <title>Admin Reported Comments || Petiva</title>
       <h2 className="text-3xl font-bold mb-6" style={{ color: PRIMARY }}>
         Reported Comments
       </h2>

@@ -482,6 +482,7 @@ const PostDetails = () => {
 
   return (
     <div className="mt-20 px-4 py-6">
+      <title>Post Details || Petiva</title>
       <article className="relative bg-white max-w-4xl mx-auto rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div
           className="h-1 w-full"

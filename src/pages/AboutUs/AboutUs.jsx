@@ -24,6 +24,7 @@ const AboutUs = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12 text-gray-800">
+      <title>About || Petiva</title>
       {/* Header */}
       <div className="text-center mb-12">
         <h1

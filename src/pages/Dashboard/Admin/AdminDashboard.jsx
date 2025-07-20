@@ -260,6 +260,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="container mx-auto p-4 md:p-8 bg-gray-50 min-h-screen">
+            <title>Admin Dashboard || Petiva</title>
             <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center border-b pb-4">Admin Dashboard Overview</h2>
 
             {/* --- Key Metrics Display --- */}
@@ -396,7 +397,7 @@ const AdminDashboard = () => {
                 {/* User Registrations Trend (Demo Data) */}
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
                     <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
-                        <FaChartLine className="text-[#4CA3B8]" /> User Registrations Trend (Demo)
+                        <FaChartLine className="text-[#4CA3B8]" /> User Registrations Trend 
                     </h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <LineChart
@@ -419,7 +420,7 @@ const AdminDashboard = () => {
                 {/* Monthly Post Uploads Trend (Demo Data) */}
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
                     <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
-                        <FaClipboardList className="text-[#82ca9d]" /> Monthly Post Uploads Trend (Demo)
+                        <FaClipboardList className="text-[#82ca9d]" /> Monthly Post Uploads Trend
                     </h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart

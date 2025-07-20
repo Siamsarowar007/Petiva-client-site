@@ -42,6 +42,7 @@ const TagsSection = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
+      <title>Tag Section || Petiva</title>
       <h2 className="text-3xl font-extrabold mb-6 text-center text-[#4CA3B8] tracking-wide">
         Browse by Tags
       </h2>

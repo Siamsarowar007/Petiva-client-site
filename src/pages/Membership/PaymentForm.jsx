@@ -209,6 +209,7 @@ const PaymentForm = ({ plan, price }) => {
 
   return (
     <div className="flex items-center justify-center mb-8 px-4 py-4 bg-gray-50">
+      <title>Payment Form || Petiva</title>
       <div className="bg-white shadow-xl border border-gray-200  p-8 rounded-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6 text-[#4CA3B8]">
           Complete Payment

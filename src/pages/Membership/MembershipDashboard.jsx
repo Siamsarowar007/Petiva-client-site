@@ -356,11 +356,11 @@ import {
   FaClipboardList,
 } from "react-icons/fa";
 import jsPDF from "jspdf";
-import autoTable from 'jspdf-autotable'; // Correct way to import and use autoTable
+import autoTable from 'jspdf-autotable'; 
 import useAuth from "../../hooks/useAuth";
 import useAxios from "../../hooks/useAxios";
 import Loader from "../../shared/Loader/Loader";
-import { NavLink } from "react-router-dom"; // Correct import for NavLink
+import { NavLink } from "react-router-dom";
 
 // Tailwind CSS classes for consistency
 const PRIMARY_COLOR_CLASS = "text-[#4CA3B8]";
@@ -382,7 +382,7 @@ const MembershipDashboard = () => {
     isPending: isMembershipPending,
     isError: isMembershipError,
     error: membershipError,
-    refetch: refetchMembershipStatus, // To refetch after update/cancel
+    refetch: refetchMembershipStatus, 
   } = useQuery({
     queryKey: ["membership-status", email],
     enabled: !!email,
@@ -520,7 +520,7 @@ const MembershipDashboard = () => {
     paymentHistory.forEach(payment => {
       const paymentDate = new Date(payment.createdAt).toLocaleDateString("en-BD", { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
       const paymentData = [
-        payment._id.substring(0, 10) + '...', // Shorten ID for table display
+        payment._id.substring(0, 10) + '...', 
         payment.packageName,
         payment.transactionId,
         payment.method,
@@ -548,6 +548,7 @@ const MembershipDashboard = () => {
       className="container mx-auto p-4 md:p-8 min-h-screen bg-gray-50 pt-20"
     >
       <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-100">
+        <title>Payment History || Petiva</title>
         <h1 className={`text-3xl md:text-4xl font-bold mb-8 text-center ${PRIMARY_COLOR_CLASS}`}>
           My Membership & Payments
         </h1>
@@ -609,9 +610,7 @@ const MembershipDashboard = () => {
             )}
             <NavLink to='/membership'>
               <button
-                onClick={handleUpgradeMembership} // This onClick will trigger Swal even though NavLink also exists.
-                                                 // For actual navigation, you might want to use `useNavigate` hook
-                                                 // and call `Maps('/membership')` inside this handler.
+                onClick={handleUpgradeMembership}
                 className={`${BUTTON_COMMON_CLASSES} ${PRIMARY_BG_COLOR_CLASS} ${PRIMARY_HOVER_BG_COLOR_CLASS}`}
               >
                 <FaArrowUp /> {status === "active" ? "Change Plan" : "Upgrade Membership"}
