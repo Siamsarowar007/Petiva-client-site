@@ -1,5 +1,3 @@
-// ueser and admin there
-
 import React, { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router";
 import {
@@ -18,6 +16,7 @@ import {
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
 import useAuth from "../hooks/useAuth";
+import useUserRole from "../hooks/useUserRole";
 
 const PRIMARY = "#4CA3B8";
 
@@ -25,6 +24,9 @@ const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { signOutUser } = useAuth(); 
   const navigate = useNavigate();
+  const {role , roleLoading} = useUserRole();
+  console.log(role);
+  
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -148,10 +150,12 @@ const DashboardLayout = () => {
               </li>
 
               {/* Admin Section */}
-              <h2 className="font-bold text-sm uppercase tracking-wide text-gray-500 mt-6 mb-2 px-4">
+              {/* <h2 className="font-bold text-sm uppercase tracking-wide text-gray-500 mt-6 mb-2 px-4">
                 Admin
-              </h2>
-              <li>
+              </h2> */}
+              { !roleLoading && role === 'admin' &&
+                <>
+                  <li>
                 <NavLink
                   to="/dashboard/admin-dashboard"
                   className={({ isActive }) =>
@@ -201,6 +205,9 @@ const DashboardLayout = () => {
                   <FaFlag /> Reported Comments
                 </NavLink>
               </li>
+                
+                </>
+              }
             </ul>
           </nav>
         </div>

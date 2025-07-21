@@ -26,6 +26,11 @@ import Support from "../pages/Support/Support";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import AdminDashboard from "../pages/Dashboard/Admin/AdminDashboard";
 import Test from "./Test/Test";
+import Forbidden from "../pages/Forbidden/Forbidden";
+import AdminRoute from "../routes/AdminRoute";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
+
+
 
 
 export const router = createBrowserRouter([
@@ -42,8 +47,8 @@ export const router = createBrowserRouter([
         element: <AllPost />,
       },
       {
-        path: "test",
-        element: <Test/>,
+        path: "forbidden",
+        element: <Forbidden/>,
       },
       {
         path: "post-details/:id",
@@ -68,6 +73,10 @@ export const router = createBrowserRouter([
       {
         path: "join-us",
         element: <JoinUs />,
+      },
+      {
+        path: "error",
+        element: <ErrorPage />,
       },
       {
         path: "membership",
@@ -141,24 +150,28 @@ export const router = createBrowserRouter([
 
       {
         path: "admin-dashboard",
-        element: <AdminDashboard/>,
+        element: <AdminRoute>
+          <AdminDashboard/>
+        </AdminRoute>,
       },
       {
         path: "admin-profile",
-        element: <AdminProfile />,
+        element: <AdminRoute>
+          <AdminProfile />
+        </AdminRoute>,
       },
        {
         path: "announcement",
-        element: <Announcement />,
+        element: <AdminRoute>
+          <Announcement />
+        </AdminRoute>,
       },
       {
         path: "manage-users",
-        element: <ManageUsers />,
+        element: <AdminRoute>
+          <ManageUsers />
+        </AdminRoute>,
       },
-      // {
-      //   path: "comment-manage",
-      //   element: <CommentManage></CommentManage>,
-      // },
       {
         path:"admin-report",
         element:<AdminReportedComments></AdminReportedComments>
@@ -166,23 +179,5 @@ export const router = createBrowserRouter([
      
     ],
   },
-  // Admin Dashboard Routes Protected by AdminRoute
-  // {
-  //   path: "/admin-dashboard",
-  //   element: (
-  //     <AdminRoute>
-  //       <AdminDashboardLayout />
-  //     </AdminRoute>
-  //   ),
-  //   children: [
-  //     {
-  //       index: true,
-  //       element: <AdminDashboardHome />,
-  //     },
-  //     {
-  //       path: "admin-manageUsers",
-  //       element: <ManageUsers />,
-  //     },
-  //   ],
-  // },
+
 ]);

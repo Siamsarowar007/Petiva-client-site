@@ -233,13 +233,14 @@ import { FaBell, FaHome, FaInfoCircle, FaQuestionCircle, FaUserCircle, FaTachome
 import { AiOutlineLogout } from "react-icons/ai";
 import { MdOutlinePostAdd, MdWorkspacePremium } from "react-icons/md";
 import { AuthContext } from "../../contexts/AuthContext/AuthContext";
-import useAxios from "../../hooks/useAxios";
 import moment from "moment";
+import useAxiosSecure from "../../hooks/useAxiosSecureFile";
 
 const Navbar = () => {
   const { user, signOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const axios = useAxios();
+  // const axiosInstance = useAxios();
+  const axiosInstance = useAxiosSecure();
 
   const [unread, setUnread] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -247,7 +248,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const res = await axios.get("/announcements");
+        const res = await axiosInstance.get("/announcements");
         const all = res.data;
         const readIds = JSON.parse(localStorage.getItem("read_announcements")) || [];
         const unreadAnnouncements = all.filter((a) => !readIds.includes(a._id));
