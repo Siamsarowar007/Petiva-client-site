@@ -1,8 +1,10 @@
-
+// src/components/TagsSection.jsx
 import React, { useState } from "react";
-import useAxios from "../../hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
+import Marquee from "react-fast-marquee";
+import useAxios from "../../hooks/useAxios";
 import Loader from "../../shared/Loader/Loader";
+import { FaTimesCircle } from "react-icons/fa"; // 🔴 Changed to FaTimesCircle for a standard delete look
 
 const tags = [
   { value: "cat", label: "Cat" },
@@ -17,7 +19,7 @@ const tags = [
   { value: "illness", label: "Illness" },
   { value: "vaccination", label: "Vaccination" },
   { value: "behavior", label: "Behavior" },
-  { value: "accessories", label: "Accessories" },
+  { value: "accessories", "label": "Accessories" },
   { value: "rescue", label: "Rescue" },
   { value: "nutrition", label: "Nutrition" },
 ];
@@ -25,6 +27,7 @@ const tags = [
 const TagsSection = () => {
   const axios = useAxios();
   const [selectedTag, setSelectedTag] = useState("");
+  const [isMarqueePaused, setIsMarqueePaused] = useState(false);
 
   const { data: posts = [], refetch, isLoading } = useQuery({
     queryKey: ["postsByTag", selectedTag],
@@ -35,50 +38,82 @@ const TagsSection = () => {
     enabled: !!selectedTag,
   });
 
-  const handleTagClick = (tag) => {
-    setSelectedTag(tag);
+  const handleTagClick = (tagValue) => {
+    setSelectedTag(tagValue);
     refetch();
+    setIsMarqueePaused(true);
+  };
+
+  const handleClearTag = () => {
+    setSelectedTag("");
+    setIsMarqueePaused(false);
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <title>Tag Section || Petiva</title>
-      <h2 className="text-3xl font-extrabold mb-6 text-center text-[#4CA3B8] tracking-wide">
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <h2 className="text-2xl md:text-4xl font-extrabold mb-6 text-center text-[#4CA3B8] tracking-wide">
         Browse by Tags
       </h2>
 
-      {/* Tag buttons */}
-      <div className="flex flex-wrap justify-center gap-4 mb-10">
-        {tags.map((tag) => (
+      <div className="mb-10 relative">
+        <Marquee
+          gradient={true}
+          gradientWidth={50}
+          gradientColor={[255, 255, 255]}
+          speed={30}
+          pauseOnHover={true}
+          play={!isMarqueePaused}
+          onMouseLeave={() => {
+            if (!selectedTag) {
+              setIsMarqueePaused(false);
+            }
+          }}
+          className="py-2"
+        >
+          {tags.map((tag) => (
+            <button
+              key={tag.value}
+              onClick={() => handleTagClick(tag.value)}
+              className={`
+                px-5 py-2 rounded-full border-2 text-sm font-medium transition
+                transform duration-300 ease-in-out whitespace-nowrap mx-2
+                ${
+                  selectedTag === tag.value
+                    ? "bg-[#4CA3B8] border-[#4CA3B8] text-white shadow-lg shadow-[#4CA3B8]/50 scale-105"
+                    : "bg-white border-gray-300 text-[#4CA3B8] hover:bg-[#4CA3B8] hover:border-[#4CA3B8] hover:text-white hover:shadow-md hover:shadow-[#4CA3B8]/40"
+                }
+                hover:-translate-y-1
+              `}
+            >
+              {tag.label}
+            </button>
+          ))}
+        </Marquee>
+
+        {selectedTag && (
           <button
-            key={tag.value}
-            onClick={() => handleTagClick(tag.value)}
-            className={`
-              px-5 py-2 rounded-full border-2 text-sm font-medium transition 
-              transform duration-300 ease-in-out
-              ${
-                selectedTag === tag.value
-                  ? "bg-[#4CA3B8] border-[#4CA3B8] text-white shadow-lg shadow-[#4CA3B8]/50 scale-105"
-                  : "bg-white border-gray-300 text-[#4CA3B8] hover:bg-[#4CA3B8] hover:border-[#4CA3B8] hover:text-white hover:shadow-md hover:shadow-[#4CA3B8]/40"
-              }
-              hover:-translate-y-1
-            `}
+            onClick={handleClearTag}
+            className="absolute right-0  top-full mt-2 mr-4 p-2
+                       bg-gray-200 text-gray-600 rounded-full shadow-md
+                       hover:bg-gray-300 hover:text-gray-800 transition-colors duration-300
+                       flex items-center gap-1 z-10"
           >
-            {tag.label}
+            <FaTimesCircle className="text-xl" /> 
+            <span className="text-sm hidden sm:inline">Clear Tag</span>
           </button>
-        ))}
+        )}
       </div>
 
-      {/* Show Results */}
+     
       {selectedTag && (
         <>
-          <h3 className="text-xl font-semibold mb-6 text-gray-700 text-center">
+          <h3 className="text-xl font-semibold mb-6 text-[#4CA3B8] text-center">
             Showing results for:{" "}
             <span className="text-[#4CA3B8] font-bold">{selectedTag}</span>
           </h3>
 
           {isLoading ? (
-            <p className="text-center text-gray-500 animate-pulse"><Loader></Loader></p>
+            <p className="text-center text-gray-500 animate-pulse"><Loader /></p>
           ) : posts.length === 0 ? (
             <p className="text-center text-gray-400 italic">No posts found.</p>
           ) : (
@@ -109,7 +144,8 @@ const TagsSection = () => {
         </>
       )}
 
-      <style jsx>{`
+    
+      <style>{`
         @keyframes fadeInUp {
           0% {
             opacity: 0;
@@ -120,28 +156,9 @@ const TagsSection = () => {
             transform: translateY(0);
           }
         }
-
-        /* For truncating description to 3 lines */
-        .line-clamp-3 {
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        /* Responsive tweaks */
-        @media (max-width: 640px) {
-          h2 {
-            font-size: 1.75rem;
-          }
-          h4 {
-            font-size: 1.25rem;
-          }
-        }
       `}</style>
     </div>
   );
 };
 
 export default TagsSection;
-

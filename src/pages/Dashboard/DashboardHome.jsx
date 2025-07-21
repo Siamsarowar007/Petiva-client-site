@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import useAuth from '../../hooks/useAuth';
-import useAxios from '../../hooks/useAxios';
 import Loader from '../../shared/Loader/Loader';
+import useAxiosSecure from '../../hooks/useAxiosSecureFile';
 
 const PRIMARY_COLOR_CLASS = "text-[#4CA3B8]";
 const PRIMARY_BG_COLOR_CLASS = "bg-[#4CA3B8]";
@@ -15,11 +15,10 @@ const PRIMARY_HOVER_BG_COLOR_CLASS = "hover:bg-[#3B8E9B]";
 
 const DashboardHome = () => {
     const { user, loading: authLoading } = useAuth();
-    const privateAxios = useAxios();
     const [dashboardData, setDashboardData] = useState(null);
     const [recentActivity, setRecentActivity] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const axiosInstance = useAxiosSecure();
     const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     const fetchDashboardData = useCallback(async () => {
@@ -31,15 +30,15 @@ const DashboardHome = () => {
         setLoading(true);
         try {
             
-            const statsRes = await privateAxios.get(`${API_BASE}/user-stats?email=${user.email}`);
+            const statsRes = await axiosInstance.get(`${API_BASE}/user-stats?email=${user.email}`);
             const statsData = statsRes.data;
 
            
-            const recentRes = await privateAxios.get(`${API_BASE}/recent?email=${user.email}&limit=3`); 
+            const recentRes = await axiosInstance.get(`${API_BASE}/recent?email=${user.email}&limit=3`); 
             setRecentActivity(recentRes.data);
 
            
-            const userDbRes = await privateAxios.get(`${API_BASE}/users/${user.email}`);
+            const userDbRes = await axiosInstance.get(`${API_BASE}/users/${user.email}`);
             const dbUserData = userDbRes.data;
 
             setDashboardData({
@@ -66,7 +65,7 @@ const DashboardHome = () => {
         } finally {
             setLoading(false);
         }
-    }, [user, privateAxios, API_BASE]);
+    }, [user, axiosInstance, API_BASE]);
 
     useEffect(() => {
         if (!authLoading) {

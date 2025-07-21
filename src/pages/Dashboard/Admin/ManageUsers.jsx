@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Loader from "../../../shared/Loader/Loader";
+import useAxiosSecure from "../../../hooks/useAxiosSecureFile";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const axiosInstance = useAxiosSecure();
   
   const fetchUsers = async (search = "") => {
     setLoading(true);
     try {
-      const res = await axios.get(`/users?search=${search}`); 
+      const res = await axiosInstance.get(`/users?search=${search}`); 
       setUsers(res.data);
     } catch (err) {
       console.error("Failed to fetch users", err);
@@ -27,7 +27,7 @@ const ManageUsers = () => {
   // Make Admin API call
   const makeAdmin = async (email) => {
     try {
-      await axios.patch(`/users/make-admin/${email}`);
+      await axiosInstance.patch(`/users/make-admin/${email}`);
       alert("User is now an Admin");
       fetchUsers(searchTerm);
     } catch (err) {

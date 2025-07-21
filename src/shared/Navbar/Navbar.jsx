@@ -331,7 +331,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar bg-base-100 shadow-sm px-4 sticky top-0 z-50">
-      {/* 🔶 Logo & Name */}
+      {/*  Logo & Name */}
       <div className="navbar-start lg:ml-76">
         <div className="dropdown -ml-4 lg:hidden">
           <label tabIndex={0} className="btn btn-ghost">
@@ -412,7 +412,7 @@ const Navbar = () => {
           </div>
         )}
 
-        {/* 👤 Profile / Join */}
+        {/*  Profile / Join */}
         <div className="lg:mr-76">
         {!user ? (
           <NavLink

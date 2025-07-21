@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import useAuth from '../../../hooks/useAuth'; // আপনার useAuth hook এর সঠিক পথ নিশ্চিত করুন
-import useAxios from '../../../hooks/useAxios'; // আপনার useAxios hook এর সঠিক পথ নিশ্চিত করুন
+import useAuth from '../../../hooks/useAuth';
 import { FaUsers, FaChartPie, FaChartLine, FaBell, FaSpinner, FaInfoCircle, FaClipboardList } from 'react-icons/fa';
-import moment from 'moment'; // For date formatting (npm install moment)
-
-// For charts (npm install recharts)
+import moment from 'moment'; 
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
     PieChart, Pie, Cell, Sector, BarChart, Bar
 } from 'recharts';
-import Swal from 'sweetalert2'; // For elegant alerts (npm install sweetalert2)
+import Swal from 'sweetalert2'; 
+import useAxiosSecure from '../../../hooks/useAxiosSecureFile';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF00FF', '#00FFFF']; // Chart colors
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF00FF', '#00FFFF'];
 
-// Custom active shape for Pie Chart (optional, for better visualization on hover)
+
 const renderActiveShape = (props) => {
     const RADIAN = Math.PI / 180;
     const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
@@ -64,7 +62,7 @@ const renderActiveShape = (props) => {
 
 const AdminDashboard = () => {
     const { user, loading: authLoading } = useAuth();
-    const axiosInstance = useAxios();
+    const axiosInstance = useAxiosSecure();
 
     const [dashboardData, setDashboardData] = useState({
         totalUsers: 'Loading...',
@@ -72,17 +70,17 @@ const AdminDashboard = () => {
         pendingReports: 0,
         recentActivities: [],
         userPieData: [], 
-        reportPieData: [], // For Pending Reports Pie Chart
-        totalPostsLineData: [], // For Total Posts Line Chart
-        userRegistrationsTrend: [], // Demo Data for User Registrations Trend Line Chart
-        monthlyPostUploadsTrend: [], // Demo Data for Monthly Post Uploads Trend Bar Chart
+        reportPieData: [], 
+        totalPostsLineData: [], 
+        userRegistrationsTrend: [], 
+        monthlyPostUploadsTrend: [], 
     });
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState(null);
     const [activeUserPieIndex, setActiveUserPieIndex] = useState(0);
     const [activeReportPieIndex, setActiveReportPieIndex] = useState(0);
 
-    // Event handlers for Pie Chart interactivity
+
     const onUserPieEnter = (_, index) => setActiveUserPieIndex(index);
     const onReportPieEnter = (_, index) => setActiveReportPieIndex(index);
 
@@ -94,7 +92,7 @@ const AdminDashboard = () => {
             setError(null);
 
             try {
-                // Fetch Total Users and prepare data for Pie Chart
+                
                 const usersRes = await axiosInstance.get('/users');
                 let totalUsersCount = 0;
                 let adminUsersCount = 0;
@@ -103,14 +101,14 @@ const AdminDashboard = () => {
                 if (usersRes.data) {
                     if (typeof usersRes.data.total === 'number') {
                         totalUsersCount = usersRes.data.total;
-                        // For pie chart, if actual roles are not returned, try to infer or use placeholders
-                        adminUsersCount = usersRes.data.users ? usersRes.data.users.filter(u => u.role === 'admin').length : Math.floor(totalUsersCount * 0.1); // Demo split
+                       
+                        adminUsersCount = usersRes.data.users ? usersRes.data.users.filter(u => u.role === 'admin').length : Math.floor(totalUsersCount * 0.1);
                         regularUsersCount = totalUsersCount - adminUsersCount;
                     } else if (Array.isArray(usersRes.data.users)) {
                         totalUsersCount = usersRes.data.users.length;
                         adminUsersCount = usersRes.data.users.filter(u => u.role === 'admin').length;
                         regularUsersCount = usersRes.data.users.filter(u => u.role === 'user').length;
-                    } else if (Array.isArray(usersRes.data)) { // If API returns just an array of users
+                    } else if (Array.isArray(usersRes.data)) { 
                         totalUsersCount = usersRes.data.length;
                         adminUsersCount = usersRes.data.filter(u => u.role === 'admin').length;
                         regularUsersCount = usersRes.data.filter(u => u.role === 'user').length;
@@ -119,27 +117,27 @@ const AdminDashboard = () => {
                 const userPieData = [
                     { name: 'Admin Users', value: adminUsersCount },
                     { name: 'Regular Users', value: regularUsersCount }
-                ].filter(item => item.value > 0); // Only show if count is greater than 0
+                ].filter(item => item.value > 0); 
 
 
-                // Fetch Total Posts and prepare data for Line Chart
+                
                 let totalPostsCount = 0;
-                let postsOverTime = []; // To store data for the line chart
+                let postsOverTime = []; 
                 try {
                     const allPostsRes = await axiosInstance.get('/all-posts');
                     totalPostsCount = allPostsRes.data ? allPostsRes.data.length : 0;
 
-                    // Prepare data for Total Posts Line Chart (e.g., cumulative posts over time)
+                    
                     if (allPostsRes.data) {
                         const sortedPosts = allPostsRes.data.sort((a, b) => new Date(a.postTime) - new Date(b.postTime));
                         let cumulativeCount = 0;
-                        const dailyPosts = {}; // Group by date
+                        const dailyPosts = {}; 
                         sortedPosts.forEach(post => {
                             const date = moment(post.postTime).format('MMM D');
                             dailyPosts[date] = (dailyPosts[date] || 0) + 1;
                         });
 
-                        // Convert to cumulative data
+                       
                         Object.keys(dailyPosts).sort((a,b) => new Date(a) - new Date(b)).forEach(date => {
                             cumulativeCount += dailyPosts[date];
                             postsOverTime.push({ date, 'Total Posts': cumulativeCount });
@@ -151,18 +149,18 @@ const AdminDashboard = () => {
                 }
 
 
-                // Fetch Pending Reports and prepare data for Pie Chart
+                
                 const reportsRes = await axiosInstance.get('/reports');
                 const pendingReportsCount = reportsRes.data ? reportsRes.data.filter(report => report.status === 'Pending').length : 0;
                 const resolvedReportsCount = reportsRes.data ? reportsRes.data.filter(report => report.status === 'Resolved').length : 0;
-                const totalReportsCount = pendingReportsCount + resolvedReportsCount; // Calculate total for display
+                const totalReportsCount = pendingReportsCount + resolvedReportsCount;
                 const reportPieData = [
                     { name: 'Pending Reports', value: pendingReportsCount },
                     { name: 'Resolved Reports', value: resolvedReportsCount }
                 ].filter(item => item.value > 0);
 
 
-                // Fetch Recent Posts (as a proxy for Recent Activities from admin's perspective)
+               
                 const recentPostsRes = await axiosInstance.get('/all-posts');
                 const recentActivities = recentPostsRes.data
                     ? recentPostsRes.data
@@ -171,10 +169,10 @@ const AdminDashboard = () => {
                             description: `"${post.title}" by ${post.authorName || post.authorEmail || 'N/A'}`,
                             timestamp: post.postTime
                         }))
-                        .slice(0, 5) // Get top 5 recent posts as activities
+                        .slice(0, 5) 
                     : [];
 
-                // --- Demo Data for Trends ---
+                
                 const demoUserRegistrationsTrend = [
                     { date: 'Jul 1', registrations: 5 },
                     { date: 'Jul 2', registrations: 8 },
@@ -199,17 +197,17 @@ const AdminDashboard = () => {
                     { month: 'Nov', posts: 100 },
                     { month: 'Dec', posts: 110 },
                 ];
-                // --- End Demo Data ---
+              
 
 
                 setDashboardData({
                     totalUsers: totalUsersCount,
                     totalPosts: totalPostsCount,
-                    pendingReports: totalReportsCount, // Display total reports count on card
+                    pendingReports: totalReportsCount, 
                     recentActivities: recentActivities,
                     userPieData: userPieData,
                     reportPieData: reportPieData,
-                    totalPostsLineData: postsOverTime, // Assign line chart data
+                    totalPostsLineData: postsOverTime, 
                     userRegistrationsTrend: demoUserRegistrationsTrend,
                     monthlyPostUploadsTrend: demoMonthlyPostUploadsTrend,
                 });
@@ -292,7 +290,7 @@ const AdminDashboard = () => {
 
             {/* --- Charts Section --- */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-                {/* Total Users Pie Chart */}
+              
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200 flex flex-col items-center">
                     <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
                         <FaChartPie className="text-[#4CA3B8]" /> User Distribution
@@ -394,7 +392,7 @@ const AdminDashboard = () => {
 
             {/* --- Trend Graphs --- */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* User Registrations Trend (Demo Data) */}
+                
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
                     <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
                         <FaChartLine className="text-[#4CA3B8]" /> User Registrations Trend 
@@ -417,7 +415,7 @@ const AdminDashboard = () => {
                     </p>
                 </div>
 
-                {/* Monthly Post Uploads Trend (Demo Data) */}
+                {/* Monthly Post Uploads Trend ) */}
                 <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
                     <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-3 flex items-center gap-2">
                         <FaClipboardList className="text-[#82ca9d]" /> Monthly Post Uploads Trend
@@ -450,7 +448,7 @@ const AdminDashboard = () => {
                     <ul className="space-y-4">
                         {dashboardData.recentActivities.map((activity, index) => (
                             <li key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-md border border-gray-100 shadow-sm">
-                                <FaChartLine className="text-[#4CA3B8] text-xl mt-1 flex-shrink-0" /> {/* Changed icon to FaChartLine, feel free to use FaClock */}
+                                <FaChartLine className="text-[#4CA3B8] text-xl mt-1 flex-shrink-0" /> 
                                 <div>
                                     <p className="font-semibold text-gray-800">{activity.type}: <span className="font-normal">{activity.description}</span></p>
                                     <p className="text-sm text-gray-500 mt-1">{moment(activity.timestamp).fromNow()} ({moment(activity.timestamp).format('MMM D, h:mm A')})</p>

@@ -25,21 +25,21 @@ const AnnouncementNotification = () => {
     }
   );
 
-  // Mark given announcements as read
+
   const markAsRead = async (ids) => {
     if (!ids.length) return;
     try {
       await axios.post("/user/announcements/read", {
         announcementIds: ids,
       });
-      // Refetch announcements after marking read
+
       queryClient.invalidateQueries(["user-announcements", user?.uid]);
     } catch (err) {
       console.error("Failed to mark announcements as read", err);
     }
   };
 
-  // When modal opens, mark all unread as read
+
   useEffect(() => {
     if (modalOpen && data?.unread?.length) {
       const unreadIds = data.unread.map((a) => a._id);

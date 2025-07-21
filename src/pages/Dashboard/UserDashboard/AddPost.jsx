@@ -4,8 +4,10 @@ import Select from "react-select";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
+
 import useAxios from "../../../hooks/useAxios";
 import { AuthContext } from "../../../contexts/AuthContext/AuthContext";
+import useAxiosSecure from "../../../hooks/useAxiosSecureFile";
 
 const PRIMARY = "#4CA3B8";
 const POST_LIMIT_FREE = 5;
@@ -13,7 +15,7 @@ const POST_LIMIT_FREE = 5;
 const AddPost = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const axios = useAxios();
+  const axiosInstance = useAxiosSecure();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -32,7 +34,7 @@ const AddPost = () => {
       setTagsLoading(true);
       setTagsError("");
       try {
-        const res = await axios.get("/tags");
+        const res = await axiosInstance.get("/tags");
         const mapped = (res.data || []).map((tag) => ({
           value: tag.name,
           label: tag.name,
@@ -46,7 +48,7 @@ const AddPost = () => {
       }
     };
     fetchTags();
-  }, [axios]);
+  }, [axiosInstance]);
 
 
   //  * User post count
@@ -59,7 +61,7 @@ const AddPost = () => {
     queryKey: ["postCount", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(`/posts/count?email=${user.email}`);
+      const res = await axiosInstance.get(`/posts/count?email=${user.email}`);
       return res.data.count;
     },
   });
@@ -93,7 +95,7 @@ const AddPost = () => {
     };
 
     try {
-      const res = await axios.post("/posts", post);
+      const res = await axiosInstance.post("/posts", post);
       if (res.status === 200 || res.status === 201) {
         Swal.fire({
           title: "Post Added!",

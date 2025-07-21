@@ -2,6 +2,9 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* @import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css"; */
+
 .urbanist-font {
   font-family: "Urbanist", sans-serif;
   font-optical-sizing: auto;
@@ -42,3 +45,46 @@
   color: #4CA3B8;
   background-color: #4CA3B8;
 } */
+
+
+
+
+
+
+/* Keyframes for continuous horizontal scroll */
+@keyframes scroll-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+
+@keyframes scroll-x-duplicate {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+.scrolling-container {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+
+  animation: scroll-x 150s linear infinite; 
+}
+
+.scrolling-container.duplicate {
+  animation: scroll-x-duplicate 60s linear infinite; 
+}
+
+
+.scrolling-container.paused {
+  animation-play-state: paused;
+}

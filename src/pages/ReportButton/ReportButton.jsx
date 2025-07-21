@@ -1,15 +1,15 @@
 import React from "react";
-import useAxios from "../../hooks/useAxios";
 import { toast } from "react-hot-toast";
+import useAxiosSecure from "../../hooks/useAxiosSecureFile";
 
 const ReportButton = ({ commentId }) => {
-  const axios = useAxios();
 
+  const axiosInstance = useAxiosSecure();
   const reportComment = async () => {
     const feedback = prompt("Reason for reporting this comment?");
     if (!feedback) return;
     try {
-      await axios.post("/comments/report", {
+      await axiosInstance.post("/comments/report", {
         commentId,
         feedback,
       });

@@ -136,7 +136,7 @@ const Footer = () => {
                     </ul>
                     <div className="mt-6">
                         <p className="font-bold mb-2">Stay Updated</p>
-                        <div className="flex items-center border border-gray-300 rounded overflow-hidden">
+                        <div className="flex items-center border border-gray-300 rounded-xl overflow-hidden">
                             <input
                                 type="email"
                                 placeholder="Enter your email"

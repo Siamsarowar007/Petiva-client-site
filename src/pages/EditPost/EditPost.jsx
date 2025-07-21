@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import useAxios from "../../hooks/useAxios";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAxiosSecureFile";
 
 const EditPost = () => {
   const { id } = useParams();
-  const axios = useAxios();
   const navigate = useNavigate();
-
+  const axiosInstance = useAxiosSecure();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -15,7 +14,7 @@ const EditPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`/posts/${id}`);
+        const res = await axiosInstance.get(`/posts/${id}`);
         setPost(res.data);
       } catch (error) {
         Swal.fire("Error", "Failed to load post", "error");
@@ -27,7 +26,7 @@ const EditPost = () => {
     if (id) {
       fetchPost();
     }
-  }, [id, axios]);
+  }, [id, axiosInstance]);
 
   // Handle form input changes safely
   const handleChange = (e) => {
@@ -45,7 +44,7 @@ const EditPost = () => {
     if (!post) return;
 
     try {
-      await axios.patch(`/posts/${id}`, {
+      await axiosInstance.patch(`/posts/${id}`, {
         title: post.title,
         description: post.description,
         tag: post.tag,

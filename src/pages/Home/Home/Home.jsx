@@ -1,63 +1,4 @@
-// import { useState } from "react";
-// import { useQuery } from "@tanstack/react-query";
-// import axios from "axios";
-// import PostCard from "./PostCard";
 
-
-// const Home = () => {
-//   const [page, setPage] = useState(1);
-//   const [sortPopular, setSortPopular] = useState(false);
-
-//   const { data, isLoading } = useQuery({
-//     queryKey: ["posts", page, sortPopular],
-//     queryFn: async () => {
-//       const res = await axios.get(
-//         `/posts-all?page=${page}&limit=5&sort=${sortPopular ? "popularity" : "default"}`
-//       );
-//       return res.data;
-//     },
-//   });
-
-//   return (
-//     <div>
-//       <div className="flex justify-between items-center my-4">
-//         <h2 className="text-2xl font-bold">All Posts</h2>
-//         <button
-//           onClick={() => {
-//             setSortPopular(!sortPopular);
-//             setPage(1);
-//           }}
-//           className="btn btn-outline btn-sm"
-//         >
-//           {sortPopular ? "Sort by Recent" : "Sort by Popularity"}
-//         </button>
-//       </div>
-
-//       {isLoading ? (
-//         <p>Loading...</p>
-//       ) : (
-//         <>
-//           <div className="grid gap-4">
-//             {data.posts.map((post) => (
-//               <PostCard key={post._id} post={post} />
-//             ))}
-//           </div>
-//           <div className="flex justify-center gap-3 mt-6">
-//             <button onClick={() => setPage(page - 1)} disabled={page === 1} className="btn btn-sm">Previous</button>
-//             <button onClick={() => setPage(page + 1)} disabled={data.totalPosts <= page * 5} className="btn btn-sm">Next</button>
-//           </div>
-//         </>
-//       )}
-//       <div>
-      
-//       </div>
-//     </div>
-    
-//   );
-// };
-
-
-// export default Home;
 
 
 
@@ -74,7 +15,7 @@ const Home = () => {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState(null);
 
-  // ✅ Normal Pagination Query
+ 
   const { data, isLoading } = useQuery({
     queryKey: ["posts", page, sortPopular],
     queryFn: async () => {
@@ -85,7 +26,7 @@ const Home = () => {
     },
   });
 
-  // ✅ Handle Tag Search
+  
   const handleTagSearch = async (e) => {
     const tag = e.target.value;
     setSearchText(tag);
@@ -107,7 +48,7 @@ const Home = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
 
-      {/* 🔍 Search Bar */}
+
       <div className="bg-[#1f1f1f] rounded-full px-6 py-4 relative mb-6">
         <div className="flex items-center space-x-3">
           <FaSearch className="text-blue-400 text-lg" />
@@ -144,7 +85,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 🔄 Search Results */}
+    
       {searchResults && (
         <div className="mb-8">
           {searchResults.length > 0 && (
@@ -160,12 +101,12 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <></> // Hide everything when no results
+            <></>
           )}
         </div>
       )}
 
-      {/* 🧾 Normal Posts (when no search) */}
+    
       {!searchResults && (
         <>
           <div className="flex justify-between items-center my-4">

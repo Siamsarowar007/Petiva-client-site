@@ -5,6 +5,9 @@ import AnnouncementSection from '../AnnouncementSection/AnnouncementSection';
 import AnnouncementList from './Home/AnnouncementList';
 import FeaturedPosts from '../FeaturedPosts/FeaturedPosts';
 import HomePost from '../AllPost/HomePost';
+import HowItWorksSection from './Home/HowItWorksSection';
+import TestimonialsSection from './Home/TestimonialsSection';
+import PartnersSection from './Home/PartnersSection';
 
 
 
@@ -15,9 +18,12 @@ const HomeLayout = () => {
             <title>Home || Petiva</title>
             <Banner></Banner>
             <TagsSection></TagsSection>
-            <AnnouncementSection></AnnouncementSection>
             <HomePost></HomePost>
+            <AnnouncementSection></AnnouncementSection>
             {/* <FeaturedPosts></FeaturedPosts> */}
+            <PartnersSection></PartnersSection>
+            <HowItWorksSection></HowItWorksSection>
+            {/* <TestimonialsSection></TestimonialsSection> */}
         </div>
     );
 };
