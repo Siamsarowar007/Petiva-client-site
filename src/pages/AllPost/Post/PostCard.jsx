@@ -18,7 +18,7 @@ import useAuth from "../../../hooks/useAuth";
 import CommentCount from "./CommentCount";
 import {useVotePost} from "../../../hooks/useVotePost" ; 
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || "http://localhost:5000";
+const SITE_URL = import.meta.env.VITE_SITE_URL || "https://pet-management-platform-server-site.vercel.app";
 
 
 const PRIMARY_COLOR_CLASS = "text-[#4CA3B8]";

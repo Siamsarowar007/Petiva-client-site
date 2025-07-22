@@ -98,7 +98,9 @@ const DashboardLayout = () => {
           {/* Navigation Links */}
           <nav className="p-5 flex-1">
             <ul className="space-y-2">
-              <li>
+              { !roleLoading && role === 'user' &&
+                <>
+                  <li>
                 <NavLink
                   to="/dashboard/dashboard-home"
                   className={({ isActive }) =>
@@ -148,6 +150,8 @@ const DashboardLayout = () => {
                   <FaListUl /> My Posts
                 </NavLink>
               </li>
+                </>
+              }
 
               {/* Admin Section */}
               {/* <h2 className="font-bold text-sm uppercase tracking-wide text-gray-500 mt-6 mb-2 px-4">

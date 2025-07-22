@@ -12,7 +12,7 @@ import PostCard from "./Post/PostCard";
 
 
 // Environment variables
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "https://pet-management-platform-server-site.vercel.app";
 
 
 const HomePost = () => {

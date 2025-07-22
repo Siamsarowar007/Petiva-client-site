@@ -33,7 +33,7 @@ const MembershipDashboard = () => {
   const { user } = useAuth();
   const email = user?.email;
 const axiosInstance = useAxiosSecure();
-  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_BASE = import.meta.env.VITE_API_URL || "https://pet-management-platform-server-site.vercel.app";
 
   // Query for Membership Status
   const {

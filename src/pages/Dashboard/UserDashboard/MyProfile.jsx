@@ -44,7 +44,7 @@ const MyProfile = () => {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    const API_BASE = import.meta.env.VITE_API_URL || "https://pet-management-platform-server-site.vercel.app";
         console.log({loading})
     const fetchUserData = useCallback(async () => {
         if (!user?.email) {

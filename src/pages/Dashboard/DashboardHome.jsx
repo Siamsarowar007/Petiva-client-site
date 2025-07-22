@@ -19,7 +19,7 @@ const DashboardHome = () => {
     const [recentActivity, setRecentActivity] = useState([]);
     const [loading, setLoading] = useState(true);
     const axiosInstance = useAxiosSecure();
-    const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    const API_BASE = import.meta.env.VITE_API_URL || "https://pet-management-platform-server-site.vercel.app";
 
     const fetchDashboardData = useCallback(async () => {
         if (!user?.email) {

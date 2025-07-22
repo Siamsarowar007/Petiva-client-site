@@ -11,7 +11,7 @@ import useAxios from "../../hooks/useAxios";
 import Loader from "../../shared/Loader/Loader";
 import PostCard from "./Post/PostCard";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "https://pet-management-platform-server-site.vercel.app";
 
 
 const DEFAULT_PER_PAGE = 6;
