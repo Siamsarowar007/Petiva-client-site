@@ -40,7 +40,7 @@ const Support = () => {
         >
           <FaEnvelope className="text-4xl mx-auto text-[#4CA3B8] mb-3" />
           <h3 className="text-lg font-semibold mb-1">Email Support</h3>
-          <p className="text-[#4CA3B8]">support@example.com</p>
+          <p className="text-[#4CA3B8]">support@petiva.com</p>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

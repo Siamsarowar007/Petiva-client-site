@@ -22,7 +22,7 @@ const ErrorPage = ({ errorMessage = "An unexpected error occurred.", errorDetail
       
         <div className="mb-6" data-aos="fade-down" data-aos-delay="200">
        
-          <h2 className="text-3xl font-extrabold text-gray-800">Your Forum Name</h2>
+          <h2 className="text-3xl font-extrabold text-gray-800">Petiva</h2>
         </div>
 
         <div

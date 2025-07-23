@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "forbidden",
-        element: <Forbidden/>,
+        element: <Forbidden />,
       },
       {
         path: "post-details/:id",
@@ -63,20 +63,20 @@ export const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: <AboutUs/>,
+        element: <AboutUs />,
       },
       {
         path: "support",
-        element: <Support/>,
+        element: <Support />,
       },
       {
         path: "join-us",
         element: <JoinUs />,
       },
-      {
-        path: "error",
-        element: <ErrorPage />,
-      },
+      // {
+      //   path: "/*",
+      //   element: <ErrorPage />,
+      // },
       {
         path: "membership",
         element: (
@@ -89,7 +89,7 @@ export const router = createBrowserRouter([
         path: "payment",
         element: (
           <PrivateRoutes>
-            <PaymentPage/>
+            <PaymentPage />
           </PrivateRoutes>
         ),
       },
@@ -106,6 +106,10 @@ export const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "/*",
+        element: <ErrorPage />,
       },
     ],
   },
@@ -132,7 +136,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "payment-membership",
-        element:<MembershipDashboard></MembershipDashboard>,
+        element: <MembershipDashboard></MembershipDashboard>,
       },
       {
         path: "add-post",
@@ -150,7 +154,7 @@ export const router = createBrowserRouter([
       {
         path: "admin-dashboard",
         element: <AdminRoute>
-          <AdminDashboard/>
+          <AdminDashboard />
         </AdminRoute>,
       },
       {
@@ -159,7 +163,7 @@ export const router = createBrowserRouter([
           <AdminProfile />
         </AdminRoute>,
       },
-       {
+      {
         path: "announcement",
         element: <AdminRoute>
           <Announcement />
@@ -172,10 +176,10 @@ export const router = createBrowserRouter([
         </AdminRoute>,
       },
       {
-        path:"admin-report",
-        element:<AdminReportedComments></AdminReportedComments>
+        path: "admin-report",
+        element: <AdminReportedComments></AdminReportedComments>
       }
-     
+
     ],
   },
 

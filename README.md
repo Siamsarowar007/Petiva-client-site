@@ -6,7 +6,7 @@
 
 ## 🔗 Live Website
 
-<!-- 👉 [Petiva Live Site](https://your-deployed-url.com) -->
+👉 Petiva Live Site- https://petiva-fc51f.web.app/
 
 ---
 
