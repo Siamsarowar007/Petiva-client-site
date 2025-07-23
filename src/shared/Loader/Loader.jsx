@@ -1,15 +1,3 @@
-// import React from 'react';
-
-// const Loader = () => {
-//     return (
-//         <div className='flex min-h-screen justify-center items-center'>
-//             <span className="loading loading-spinner text-info items-center"></span>
-//         </div>
-//     );
-// };
-
-// export default Loader;
-
 import React from 'react';
 
 const Loader = ({ size = 'lg', color = '#4CA3B8', className = '' }) => {
@@ -26,7 +14,7 @@ const Loader = ({ size = 'lg', color = '#4CA3B8', className = '' }) => {
       borderSize = 'border-4';
       break;
     case 'lg':
-      spinnerSizeClasses = 'w-16 h-16'; // Increased size for default loader
+      spinnerSizeClasses = 'w-16 h-16'; 
       borderSize = 'border-5';
       break;
     case 'xl':
@@ -34,7 +22,7 @@ const Loader = ({ size = 'lg', color = '#4CA3B8', className = '' }) => {
       borderSize = 'border-6';
       break;
     default:
-      spinnerSizeClasses = 'w-16 h-16'; // Default to 'lg' if no size is specified
+      spinnerSizeClasses = 'w-16 h-16';
       borderSize = 'border-5';
   }
 

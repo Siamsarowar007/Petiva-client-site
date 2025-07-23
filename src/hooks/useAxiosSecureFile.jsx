@@ -32,7 +32,7 @@ const useAxiosSecure = () => {
     },
     (error) => {
       const status = error.status;
-      // Only auto-logout on 401 (authentication errors)
+     
       if (error.response?.status === 401) {
         signOutUser()
           .then(() => console.log("sign out user for status code 401"))

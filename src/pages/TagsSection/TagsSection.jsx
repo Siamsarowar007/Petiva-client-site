@@ -1,11 +1,9 @@
-// src/components/TagsSection.jsx
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Marquee from "react-fast-marquee";
 import useAxios from "../../hooks/useAxios";
 import Loader from "../../shared/Loader/Loader";
-import { FaTimesCircle } from "react-icons/fa"; // 🔴 Changed to FaTimesCircle for a standard delete look
-
+import { FaTimesCircle } from "react-icons/fa"; 
 const tags = [
   { value: "cat", label: "Cat" },
   { value: "dog", label: "Dog" },

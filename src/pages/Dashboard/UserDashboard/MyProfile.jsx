@@ -20,7 +20,7 @@ const PRIMARY_FOCUS_OUTLINE_CLASS = "focus:ring-2 focus:ring-[#4CA3B8] focus:bor
 
 
 const MyProfile = () => {
-    const { user, loading: authLoading, updateUserProfile } = useAuth();
+    const { user, setLoading: setAuthLoading, loading: authLoading, updateUserProfile } = useAuth();
     const [profileData, setProfileData] = useState(null);
     const [recentActivity, setRecentActivity] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -148,6 +148,7 @@ const MyProfile = () => {
             setLoading(false)
             fetchUserData(); 
             setShowPasswordChange(false);
+            setAuthLoading(false);
 
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -158,6 +159,7 @@ const MyProfile = () => {
             });
         } finally {
             setLoading(false);
+            setAuthLoading(false);
         }
     };
 
@@ -229,6 +231,8 @@ const MyProfile = () => {
 
 
     if (authLoading || loading) {
+        console.log(authLoading,loading);
+        
         return <div className="min-h-screen flex items-center justify-center"><Loader /></div>;
     }
 

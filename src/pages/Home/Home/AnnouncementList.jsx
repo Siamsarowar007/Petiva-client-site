@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const AnnouncementList = () => {
-  // Fetch announcements
+
   const { data: announcements = [], isLoading, isError } = useQuery(
     ["announcements"],
     async () => {

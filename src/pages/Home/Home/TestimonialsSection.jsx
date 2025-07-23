@@ -1,17 +1,16 @@
-// src/components/TestimonialsSection.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
-import Slider from 'react-slick'; // Import Slider component
-import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa'; // Quote icons
+import Slider from 'react-slick'; 
+import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa'; 
 
-// Sample Testimonials - Replace with actual data from your backend if available
+
 const testimonials = [
   {
     id: 1,
     quote: "Finding this pet forum was a game-changer! I got incredible advice for my shy rescue cat. The community is so supportive and knowledgeable.",
     author: "Neha Sharma",
     pet: "Whisker (Cat)",
-    avatar: "https://i.ibb.co/VgY9pJf/avatar.png", // Generic avatar or user specific
+    avatar: "https://i.ibb.co/VgY9pJf/avatar.png", 
   },
   {
     id: 2,
@@ -51,25 +50,25 @@ const TestimonialsSection = () => {
     slidesToShow: 2,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000, // 5 seconds
-    arrows: false, // Hide default arrows
+    autoplaySpeed: 5000, 
+    arrows: false,
     responsive: [
       {
-        breakpoint: 1024, // lg
+        breakpoint: 1024, 
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
         },
       },
       {
-        breakpoint: 768, // md
+        breakpoint: 768, 
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
         },
       },
       {
-        breakpoint: 640, // sm
+        breakpoint: 640,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -100,7 +99,7 @@ const TestimonialsSection = () => {
       >
         <Slider {...settings}>
           {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="p-4 outline-none"> {/* p-4 for internal card padding */}
+            <div key={testimonial.id} className="p-4 outline-none"> 
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl shadow-md p-8 min-h-[250px] flex flex-col justify-between border-l-4 border-[#4CA3B8] transition-all duration-300 hover:shadow-lg hover:scale-[1.01]">
                 <div className="mb-4 relative">
                   <FaQuoteLeft className="absolute -top-4 -left-4 text-5xl text-[#4CA3B8] opacity-20" />

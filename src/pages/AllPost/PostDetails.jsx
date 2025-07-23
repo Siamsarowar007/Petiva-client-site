@@ -6,7 +6,6 @@ import {
   FaCommentDots,
   FaShareAlt,
 } from "react-icons/fa";
-import useAxios from "../../hooks/useAxios";
 import useAuth from "../../hooks/useAuth";
 import Loader from "../../shared/Loader/Loader";
 
@@ -23,7 +22,6 @@ const PRIMARY = "#4CA3B8";
 
 const PostDetails = () => {
   const { id } = useParams();
-  // const axiosInstance = useAxios();
   const { user } = useAuth();
   const axiosInstance = useAxiosSecure();
   const [post, setPost] = useState(null);

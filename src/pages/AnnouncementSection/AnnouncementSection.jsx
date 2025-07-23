@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import useAxiosSecure from "../../hooks/useAxiosSecureFile";
 
 const AnnouncementSection = () => {
-  // const axiosInstance = useAxios();
   const [expandedId, setExpandedId] = useState(null);
   const [isPaused, setIsPaused] = useState(false); 
   const axiosInstance = useAxiosSecure();
