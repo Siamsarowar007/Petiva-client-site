@@ -73,7 +73,7 @@ const Support = () => {
           Start Live Chat
         </button>
       </motion.div>
-
+    
       {/* Operating Hours */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -85,6 +85,7 @@ const Support = () => {
           🕒 Support Hours: 9:00 AM – 9:00 PM (Everyday)
         </p>
       </motion.div>
+
 
       {/* Social Media Support */}
       <motion.div
