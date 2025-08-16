@@ -48,7 +48,7 @@ const TagsSection = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto py-8">
       <h2 className="text-2xl md:text-4xl font-extrabold mb-6 text-center text-[#4CA3B8] tracking-wide">
         Browse by Tags
       </h2>
