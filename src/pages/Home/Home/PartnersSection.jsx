@@ -14,7 +14,7 @@ const partners = [
 
 const PartnersSection = () => {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16 bg-gray-50 rounded-xl shadow-lg mb-12">
+    <div className="max-w-7xl mx-auto py-16 bg-gray-50 rounded-xl shadow-lg mb-12">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
