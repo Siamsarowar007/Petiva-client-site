@@ -226,7 +226,6 @@
 // export default Navbar;
 
 
-
 import { useEffect, useState, useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaBell, FaHome, FaInfoCircle, FaQuestionCircle, FaUserCircle, FaTachometerAlt } from "react-icons/fa";
@@ -353,11 +352,15 @@ const Navbar = () => {
               {navItems}
             </ul>
           </div>
-
-          <div className="flex items-center gap-2 cursor-pointer">
-            <img src="/Petiva-logo.png" alt="Petiva Logo" className="w-14 -ml-4 h-14 object-contain" />
+          {/* Logo Section */}
+          <Link href="/" className="flex items-center gap-2">
+            <img
+              src="/Petiva-logo.png"
+              alt="Petiva Logo"
+              className="w-14 -ml-4 h-14 object-contain"
+            />
             <h4 className="text-[#4CA3B8] text-3xl -ml-4 font-bold m-0">Petiva</h4>
-          </div>
+          </Link>
         </div>
 
         {/* Center Navigation */}
@@ -414,51 +417,51 @@ const Navbar = () => {
           )}
 
           {/* Profile / Join */}
-<div>
-  {!user ? (
-    <NavLink
-      to="/join-us"
-      className="btn btn-sm md:btn-md lg:btn-lg bg-[#4CA3B8] text-white hover:bg-[#3b889e] transition-all duration-200"
-    >
-      Join Us
-    </NavLink>
-  ) : (
-    <div className="dropdown dropdown-end">
-      <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-        <div className="w-10 h-10 rounded-full ring ring-[#4CA3B8] ring-offset-base-100 ring-offset-2 overflow-hidden">
-          <img
-            src={user?.photoURL || "/default-avatar.png"}
-            alt="profile"
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </label>
-      <ul
-        tabIndex={0}
-        className="mt-3 z-[10] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-56"
-      >
-        <Link to="/dashboard/profile">
-          <li className="font-semibold flex ml-4 text-sm md:text-base lg:text-lg gap-2"> {/* এখানে পরিবর্তন করা হয়েছে */}
-            <FaUserCircle /> {user.displayName || "User"}
-          </li>
-        </Link>
-        <li>
-          <NavLink to="/dashboard" className="flex items-center gap-2 text-sm md:text-base lg:text-lg hover:text-[#4CA3B8]"> {/* এখানে পরিবর্তন করা হয়েছে */}
-            <FaTachometerAlt /> Dashboard
-          </NavLink>
-        </li>
-        <li>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-red-500 hover:text-red-600 text-sm md:text-base lg:text-lg" /* এখানে পরিবর্তন করা হয়েছে */
-          >
-            <AiOutlineLogout /> Logout
-          </button>
-        </li>
-      </ul>
-    </div>
-  )}
-</div>
+          <div>
+            {!user ? (
+              <NavLink
+                to="/join-us"
+                className="btn btn-sm md:btn-md lg:btn-lg bg-[#4CA3B8] text-white hover:bg-[#3b889e] transition-all duration-200"
+              >
+                Join Us
+              </NavLink>
+            ) : (
+              <div className="dropdown dropdown-end">
+                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                  <div className="w-10 h-10 rounded-full ring ring-[#4CA3B8] ring-offset-base-100 ring-offset-2 overflow-hidden">
+                    <img
+                      src={user?.photoURL || "/default-avatar.png"}
+                      alt="profile"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </label>
+                <ul
+                  tabIndex={0}
+                  className="mt-3 z-[10] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-56"
+                >
+                  <Link to="/dashboard/profile">
+                    <li className="font-semibold flex ml-4 text-sm md:text-base lg:text-lg gap-2"> {/* এখানে পরিবর্তন করা হয়েছে */}
+                      <FaUserCircle /> {user.displayName || "User"}
+                    </li>
+                  </Link>
+                  <li>
+                    <NavLink to="/dashboard" className="flex items-center gap-2 text-sm md:text-base lg:text-lg hover:text-[#4CA3B8]"> {/* এখানে পরিবর্তন করা হয়েছে */}
+                      <FaTachometerAlt /> Dashboard
+                    </NavLink>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-2 text-red-500 hover:text-red-600 text-sm md:text-base lg:text-lg" /* এখানে পরিবর্তন করা হয়েছে */
+                    >
+                      <AiOutlineLogout /> Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
