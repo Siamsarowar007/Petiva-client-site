@@ -1,203 +1,177 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useRef, useState } from "react";
+import Swal from "sweetalert2";
+import {
+  FaEnvelope,
+  FaPhoneAlt,
+  FaPaperPlane,
+  FaCheckCircle,
+} from "react-icons/fa";
+import { MdLiveHelp, MdSupportAgent } from "react-icons/md";
 import { motion } from "framer-motion";
 
-const plans = [
-  {
-    name: "Bronze",
-    price: "Free",
-    features: [
-      "Default for all registered users",
-      "Basic Access",
-      "Bronze Profile Badge",
-    ],
-    badgeColor: "#CD7F32",
-  },
-  {
-    name: "Silver",
-    price: "৳800/month",
-    features: [
-      "20 posts per month",
-      "Silver Member Access",
-      "Verified Silver Profile Badge",
-    ],
-    badgeColor: "#C0C0C0",
-  },
-  {
-    name: "Gold",
-    price: "৳1500/month",
-    features: [
-      "Unlimited posts",
-      "Gold Member Access",
-      "Dedicated Support Manager",
-      "Priority Post Boosting",
-      "Verified Gold Profile Badge",
-    ],
-    badgeColor: "#FFD700",
-  },
-  {
-    name: "Platinum",
-    price: "৳2000/month",
-    features: [
-      "All Gold Features",
-      "Verified Profile Badge",
-      "Homepage Spotlight",
-      "Unlimited Pet Ads",
-    ],
-    badgeColor: "#2c67f2",
-  },
-];
+const Support = () => {
+  const isLive = true;
+  const feedbackRef = useRef(null);
 
-const MembershipPage = ({ userEmail }) => {
-  const navigate = useNavigate();
-  const [loadingBronze, setLoadingBronze] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleSubscribe = async (plan) => {
-    if (plan.name === "Bronze") {
-      try {
-        setLoadingBronze(true);
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/membership/activate-bronze`, {
-          email: userEmail,
-        });
-        alert("Bronze plan activated successfully!");
-      } catch (error) {
-        alert("Failed to activate Bronze plan.");
-        console.error(error);
-      } finally {
-        setLoadingBronze(false);
-      }
-    } else {
-      const price = plan.price.match(/\d+/g)?.join("") || "";
-      navigate(`/payment?plan=${plan.name}&price=${price}`);
-    }
+  const scrollToFeedback = () => {
+    feedbackRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    Swal.fire({
+      icon: "success",
+      title: "Thank you!",
+      text: "Feedback submitted!",
+    });
+
+    setName("");
+    setEmail("");
+    setMessage("");
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <title>Membership || Petiva</title>
-      <motion.h1
-        className="text-4xl font-extrabold text-center mb-12 text-[#4CA3B8]"
-        initial={{ opacity: 0, y: -30 }}
+    <div className="max-w-7xl mx-auto px-4 py-12 text-gray-800">
+      <title>Support || Petiva</title>
+
+      {/* Header */}
+      <motion.div
+        className="text-center mb-12"
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        Choose Your Membership Plan
-      </motion.h1>
+        <MdSupportAgent className="text-5xl text-[#4CA3B8] mx-auto mb-3" />
+        <h2 className="text-3xl font-bold text-[#4CA3B8] mb-2">
+          Support & Help Center
+        </h2>
+        <p className="text-sm text-gray-600 max-w-xl mx-auto">
+          Welcome to Petiva’s dedicated support space. We're here to guide you!
+        </p>
+      </motion.div>
 
-      {/* Plans */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {plans.map((plan, index) => (
-          <motion.div
-            key={plan.name}
-            className="bg-white border border-[#4CA3B8]/20 shadow-md hover:shadow-xl rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * index, duration: 0.5 }}
-          >
-            <div>
-              <h2
-                className="text-2xl font-bold mb-2 flex items-center gap-2"
-                style={{ color: plan.badgeColor }}
-              >
-                {plan.name} Plan
-                <span
-                  className="text-xs px-2 py-1 rounded-full font-medium"
-                  style={{
-                    backgroundColor: plan.badgeColor,
-                    color: "white",
-                  }}
-                >
-                  {plan.name}
-                </span>
-              </h2>
-              <p className="text-xl font-semibold mb-4 text-gray-700">
-                {plan.price}
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-sm text-gray-600">
-                {plan.features.map((feature, i) => (
-                  <li key={i}>{feature}</li>
-                ))}
-              </ul>
-            </div>
+      {/* Contact */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="border p-6 rounded-lg shadow text-center"
+        >
+          <FaEnvelope className="text-4xl mx-auto text-[#4CA3B8] mb-3" />
+          <h3 className="text-lg font-semibold mb-1">Email Support</h3>
+          <p className="text-[#4CA3B8]">support@petiva.com</p>
+        </motion.div>
 
-            <button
-              onClick={() => handleSubscribe(plan)}
-              disabled={loadingBronze && plan.name === "Bronze"}
-              className={`
-                mt-6 w-full py-3 rounded-lg font-semibold text-white 
-                transition-all duration-300 shadow-sm hover:shadow-md
-                ${
-                  plan.name === "Bronze"
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-[#4CA3B8] hover:bg-[#3e8da3]"
-                }
-                disabled:opacity-50 disabled:cursor-not-allowed
-              `}
-            >
-              {loadingBronze && plan.name === "Bronze"
-                ? "Activating..."
-                : "Subscribe Now"}
-            </button>
-          </motion.div>
-        ))}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="border p-6 rounded-lg shadow text-center"
+        >
+          <FaPhoneAlt className="text-4xl mx-auto text-[#4CA3B8] mb-3" />
+          <h3 className="text-lg font-semibold mb-1">Call Us</h3>
+          <p className="text-[#4CA3B8]">+88 01740 000000</p>
+        </motion.div>
       </div>
 
-      {/* Why Become a Member Section */}
-      <motion.section
-        className="mt-20 max-w-6xl mx-auto px-4"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
+      {/* Live Chat */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-[#F0FAFD] p-6 rounded-lg shadow text-center mb-10"
       >
-        <h2 className="text-3xl font-bold text-center text-[#4CA3B8] mb-10">
-          Why Become a Member?
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-          {[
-            {
-              icon: "https://cdn-icons-png.flaticon.com/512/942/942748.png",
-              title: "Boosted Visibility",
-              text: "Get more reach and interactions on your posts by upgrading.",
-            },
-            {
-              icon: "https://cdn-icons-png.flaticon.com/512/2872/2872312.png",
-              title: "Verified Badge",
-              text: "Show credibility and stand out with a verified badge.",
-            },
-            {
-              icon: "https://cdn-icons-png.flaticon.com/512/950/950884.png",
-              title: "Priority Support",
-              text: "Get instant support from our dedicated team whenever you need.",
-            },
-            {
-              icon: "https://cdn-icons-png.flaticon.com/512/747/747376.png",
-              title: "Unlimited Access",
-              text: "Remove limits and unlock all features of the platform.",
-            },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              className="bg-white border border-[#4CA3B8]/20 shadow-sm rounded-xl p-6 hover:shadow-md transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-            >
-              <img
-                src={item.icon}
-                alt={item.title}
-                className="w-12 h-12 mx-auto mb-3"
+        <MdLiveHelp className="text-4xl text-[#4CA3B8] mx-auto mb-2" />
+        <h3 className="text-lg font-semibold mb-2">Live Chat Support</h3>
+        <p className="mb-3 text-sm">
+          Need instant help? Our support team is available via live chat during
+          business hours.
+        </p>
+        <p className="font-medium mb-4">
+          {isLive ? "🟢 Live Chat Available Soon" : "🔴 Offline"}
+        </p>
+        <button className="bg-gray-300 cursor-not-allowed text-gray-600 px-6 py-2 rounded">
+          Start Chat (Coming Soon)
+        </button>
+      </motion.div>
+
+      {/* Shortcut Button */}
+      <div className="text-center mb-12">
+        <button
+          onClick={scrollToFeedback}
+          className="bg-[#4CA3B8] text-white px-6 py-2 rounded hover:bg-[#3a8aa3]"
+        >
+          Send Feedback
+        </button>
+      </div>
+
+      {/* Feedback Form */}
+      <div ref={feedbackRef}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="border p-8 rounded-xl shadow-lg"
+        >
+          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-[#4CA3B8]">
+            <FaPaperPlane /> Send Us Feedback
+          </h3>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-medium mb-1">Your Name</label>
+              <input
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 border rounded"
+                required
               />
-              <h3 className="text-lg font-semibold text-[#4CA3B8] mb-1">
-                {item.title}
-              </h3>
-              <p className="text-sm text-gray-600">{item.text}</p>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Your Email</label>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Message</label>
+              <textarea
+                rows="4"
+                placeholder="Write your message..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full px-4 py-2 border rounded"
+                required
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              className="bg-[#4CA3B8] hover:bg-[#3a8aa3] text-white px-6 py-2 rounded flex items-center gap-2 mx-auto"
+            >
+              <FaCheckCircle /> Submit Feedback
+            </button>
+          </form>
+        </motion.div>
+      </div>
+
+      {/* Footer */}
+      <div className="text-center mt-8 text-sm text-gray-600">
+        🕒 Support Hours: 9:00 AM – 9:00 PM (Everyday)
+      </div>
     </div>
   );
 };
 
-export default MembershipPage;
-
+export default Support;

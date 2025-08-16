@@ -65,7 +65,7 @@ const DashboardLayout = () => {
         onClick={toggleSidebar}
         className="lg:hidden fixed top-4 left-4 z-50 btn btn-ghost text-xl bg-white shadow-md rounded-full p-2"
       >
-        {isSidebarOpen ? <IoClose /> : <FaBars />}
+        {isSidebarOpen ? <IoClose className="text-[#4CA3B8]"/> : <FaBars />}
       </button>
 
       {/* Sidebar */}

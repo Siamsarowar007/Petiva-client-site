@@ -66,7 +66,7 @@ const HowItWorksSection = () => {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.3 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16 justify-items-center"
+        className="grid grid-cols-1 md:grid-cols-3 px-4 gap-10 lg:gap-16 justify-items-center"
       >
         {steps.map((step, index) => (
           <motion.div
