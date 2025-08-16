@@ -21,12 +21,12 @@
 //   const [currentPage, setCurrentPage] = useState(1);
 //   const [activityModalOpen, setActivityModalOpen] = useState(false);
 //   const [selectedUserActivity, setSelectedUserActivity] = useState(null);
-//   const usersPerPage = 5;
-  
+//   const usersPerPage = 10; // প্রতি পৃষ্ঠায় ইউজারের সংখ্যা 5 থেকে 10 করা হয়েছে
+
 
 //   useEffect(() => {
 //     fetchUsers();
-//   }, [search, showBanned, selectedRole]);
+//   }, [search, showBanned, selectedRole]); // `selectedRole` এবং `search` পরিবর্তনের সাথে সাথে ইউজার ফেচ করা হবে
 
 //   const fetchUsers = async () => {
 //     try {
@@ -34,8 +34,23 @@
 //       let filtered = res.data.reverse();
 //       if (!showBanned) filtered = filtered.filter(user => user.status !== 'Banned');
 //       if (selectedRole !== 'All') filtered = filtered.filter(user => user.role === selectedRole.toLowerCase());
-//       setUsers(filtered);
-//       setCurrentPage(1); 
+
+//       // প্রতিটি ইউজারের জন্য সাবস্ক্রিপশন স্ট্যাটাস ফেচ করা হচ্ছে
+//       const usersWithSubscription = await Promise.all(
+//         filtered.map(async (user) => {
+//           try {
+//             const paymentRes = await axiosSecure.get(`/api/payments?email=${user.email}`);
+//             // যদি পেমেন্ট ডেটা থাকে, তাহলে সাবস্ক্রিপশন 'Membership', অন্যথায় 'Free'
+//             const subscriptionStatus = paymentRes.data && paymentRes.data.length > 0 ? 'Membership' : 'Free';
+//             return { ...user, subscription: subscriptionStatus };
+//           } catch (paymentError) {
+//             console.error(`Failed to fetch payment for ${user.email}:`, paymentError);
+//             return { ...user, subscription: 'Free' }; // ত্রুটি হলে ডিফল্ট Free
+//           }
+//         })
+//       );
+//       setUsers(usersWithSubscription); // আপডেট করা ইউজার লিস্ট সেট করা হয়েছে
+//       setCurrentPage(1); // ফিল্টার বা সার্চ করার পর প্রথম পৃষ্ঠায় ফিরে যাওয়া
 //     } catch (error) {
 //       console.error('Failed to fetch users:', error);
 //     }
@@ -50,7 +65,7 @@
 //       }
 //     } catch (error) {
 //       console.error('Make admin failed:', error);
-//       Swal.fire('Error', 'Admin বানাতে সমস্যা হয়েছে।', 'error');
+//       Swal.fire('Error', 'Admin বানাতে সমস্যা হয়েছে।', 'error');
 //     }
 //   };
 
@@ -63,7 +78,7 @@
 //       }
 //     } catch (error) {
 //       console.error('Remove admin failed:', error);
-//       Swal.fire('Error', 'Admin রিমুভ করতে সমস্যা হয়েছে।', 'error');
+//       Swal.fire('Error', 'Admin রিমুভ করতে সমস্যা হয়েছে।', 'error');
 //     }
 //   };
 
@@ -81,7 +96,7 @@
 //       }
 //     } catch (error) {
 //       console.error('Ban/unban failed:', error);
-//       Swal.fire('Error', 'Ban/Unban করতে সমস্যা হয়েছে।', 'error');
+//       Swal.fire('Error', 'Ban/Unban করতে সমস্যা হয়েছে।', 'error');
 //     }
 //   };
 
@@ -99,7 +114,7 @@
 //       }
 //     } catch (error) {
 //       console.error('Lock/unlock failed:', error);
-//       Swal.fire('Error', 'Lock/unlock করতে সমস্যা হয়েছে।', 'error');
+//       Swal.fire('Error', 'Lock/unlock করতে সমস্যা হয়েছে।', 'error');
 //     }
 //   };
 
@@ -110,7 +125,7 @@
 //       setActivityModalOpen(true);
 //     } catch (e) {
 //       console.error('Activity fetch failed:', e);
-//       Swal.fire('Error', 'Activity log আনতে সমস্যা হয়েছে।', 'error');
+//       Swal.fire('Error', 'Activity log আনতে সমস্যা হয়েছে।', 'error');
 //     }
 //   };
 
@@ -187,7 +202,10 @@
 //                   {user.status || 'Active'}
 //                 </td>
 //                 <td>
-//                   <span className="badge badge-outline badge-info">{user.subscription || 'Free'}</span>
+//                   {/* এখানে সাবস্ক্রিপশন স্ট্যাটাস দেখানো হচ্ছে */}
+//                   <span className={`badge badge-outline ${user.subscription === 'Membership' ? 'badge-info' : 'badge-neutral'}`}>
+//                     {user.subscription || 'Free'}
+//                   </span>
 //                 </td>
 //                 <td>{new Date(user.created_at).toLocaleDateString()}</td>
 //                 <td className="flex flex-wrap gap-1">
@@ -302,6 +320,8 @@
 // export default ManageUsers;
 
 
+
+
 import React, { useEffect, useState } from 'react';
 import {
   FaShieldAlt,
@@ -314,6 +334,7 @@ import {
 import { MdAdminPanelSettings } from 'react-icons/md';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../hooks/useAxiosSecureFile';
+import Loader from '../../shared/Loader/Loader';
 
 
 const ManageUsers = () => {
@@ -325,38 +346,39 @@ const ManageUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activityModalOpen, setActivityModalOpen] = useState(false);
   const [selectedUserActivity, setSelectedUserActivity] = useState(null);
-  const usersPerPage = 10; // প্রতি পৃষ্ঠায় ইউজারের সংখ্যা 5 থেকে 10 করা হয়েছে
-
+  const [loading, setLoading] = useState(false);
+  const usersPerPage = 10;
 
   useEffect(() => {
     fetchUsers();
-  }, [search, showBanned, selectedRole]); // `selectedRole` এবং `search` পরিবর্তনের সাথে সাথে ইউজার ফেচ করা হবে
+  }, [search, showBanned, selectedRole]);
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
       const res = await axiosSecure.get(`/users?search=${search}`);
       let filtered = res.data.reverse();
       if (!showBanned) filtered = filtered.filter(user => user.status !== 'Banned');
       if (selectedRole !== 'All') filtered = filtered.filter(user => user.role === selectedRole.toLowerCase());
 
-      // প্রতিটি ইউজারের জন্য সাবস্ক্রিপশন স্ট্যাটাস ফেচ করা হচ্ছে
       const usersWithSubscription = await Promise.all(
         filtered.map(async (user) => {
           try {
             const paymentRes = await axiosSecure.get(`/api/payments?email=${user.email}`);
-            // যদি পেমেন্ট ডেটা থাকে, তাহলে সাবস্ক্রিপশন 'Membership', অন্যথায় 'Free'
             const subscriptionStatus = paymentRes.data && paymentRes.data.length > 0 ? 'Membership' : 'Free';
             return { ...user, subscription: subscriptionStatus };
           } catch (paymentError) {
             console.error(`Failed to fetch payment for ${user.email}:`, paymentError);
-            return { ...user, subscription: 'Free' }; // ত্রুটি হলে ডিফল্ট Free
+            return { ...user, subscription: 'Free' };
           }
         })
       );
-      setUsers(usersWithSubscription); // আপডেট করা ইউজার লিস্ট সেট করা হয়েছে
-      setCurrentPage(1); // ফিল্টার বা সার্চ করার পর প্রথম পৃষ্ঠায় ফিরে যাওয়া
+      setUsers(usersWithSubscription);
+      setCurrentPage(1);
+      setLoading(false); 
     } catch (error) {
       console.error('Failed to fetch users:', error);
+      setLoading(false);
     }
   };
 
@@ -444,8 +466,11 @@ const ManageUsers = () => {
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(users.length / usersPerPage);
 
-  // Pagination page change handler
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  if (loading) {
+    return <Loader size="lg" />;
+  }
 
   return (
     <div className="p-4">
@@ -506,7 +531,6 @@ const ManageUsers = () => {
                   {user.status || 'Active'}
                 </td>
                 <td>
-                  {/* এখানে সাবস্ক্রিপশন স্ট্যাটাস দেখানো হচ্ছে */}
                   <span className={`badge badge-outline ${user.subscription === 'Membership' ? 'badge-info' : 'badge-neutral'}`}>
                     {user.subscription || 'Free'}
                   </span>
