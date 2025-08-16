@@ -66,7 +66,7 @@ const AnnouncementSection = () => {
   );
 
   return (
-    <div className="max-w-6xl px-4 mx-auto py-10">
+    <div className="max-w-7xl mx-auto py-10">
       <h2 className="text-2xl md:text-4xl font-bold mb-8 text-[#4CA3B8] text-center flex items-center justify-center gap-2">
         <FaBullhorn /> Announcements
       </h2>
@@ -84,7 +84,6 @@ const AnnouncementSection = () => {
           ))}
         </div>
       </div>
-
     
       <AnimatePresence>
         {expandedId && (
